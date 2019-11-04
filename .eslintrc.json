@@ -1,7 +1,13 @@
 {
-  "root": true,
-  "extends": ["fullstack", "prettier", "prettier/react"],
+  "extends": "fullstack",
+  "parser": "babel-eslint",
   "rules": {
-    "semi": 0
+    "radix": 0,
+    "no-trailing-spaces": 0,
+    "eol-last": 0,
+    "no-multiple-empty-lines": 0,
+    "space-infix-ops": 0,
+    "no-warning-comments": 0,
+    "quotes": 0
   }
 }
