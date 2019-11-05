@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {User, Treehouse} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -13,6 +13,24 @@ async function seed() {
   ])
 
   console.log(`seeded ${users.length} users`)
+
+  const houses = [
+    {
+      name: 'Basic Tree House',
+      description: 'Budget-friendly and easily installed',
+      price: 99.99,
+      imageUrl:
+        'https://i.pinimg.com/originals/be/4a/0e/be4a0eb411a219b65b05554c0dd7f9b2.jpg'
+    }
+  ]
+
+  await Promise.all(
+    houses.map(house => {
+      return Treehouse.create(house)
+    })
+  )
+
+  console.log(`seeded ${houses.length} users`)
   console.log(`seeded successfully`)
 }
 
