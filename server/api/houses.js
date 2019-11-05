@@ -6,4 +6,14 @@ router.get('/', async (req, res, next) => {
   res.json(houses)
 })
 
+router.get('/:id', async (req, res, next) => {
+  try {
+    const treehouseById = await Treehouse.findById(req.params.id)
+    res.json(treehouseById)
+  } catch (error) {
+    console.error(error)
+    next(error)
+  }
+})
+
 module.exports = router

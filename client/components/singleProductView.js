@@ -1,9 +1,15 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {getSingleProduct} from '../store/cart'
 
 class SingleProduct extends Component {
-  consturctor() {
+  constructor() {
     super()
+  }
+
+  componentDidMount() {
+    console.log('PROPS ->', this.props)
+    this.props.viewSingleProduct(this.props.match.params.id)
   }
 
   render() {
@@ -11,9 +17,9 @@ class SingleProduct extends Component {
       <div>
         <h1>SINGLE HOUSE</h1>
         <p>Check the tree house available!</p>
-        <h2>House's Name</h2>
-        <img>Image</img>
-        <p>Description</p>
+        <h2>{this.props.treehouses.name}</h2>
+        <img src={this.props.treehouses.imageUrl} />
+        <p>{this.props.treehouses.description}}</p>
         <button type="submit">Add To Cart</button>
       </div>
     )
@@ -22,19 +28,16 @@ class SingleProduct extends Component {
 
 const mapStateToProps = state => {
   return {
-    products: state.treeHouse
+    treehouses: state.treeHouse
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSingleProduct: id => {
+    viewSingleProduct: id => {
       dispatch(getSingleProduct(id))
     }
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SingleProduct)
+export default connect(mapStateToProps, mapDispatchToProps)(SingleProduct)
