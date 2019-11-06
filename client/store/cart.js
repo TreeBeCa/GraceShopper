@@ -37,7 +37,7 @@ export const editCart = houseId => ({
 export const getSingleProduct = id => {
   return async dispatch => {
     try {
-      const {data} = await axios.get(`/api/products/${id}`)
+      const {data} = await axios.get(`/api/treehouses/${id}`)
       dispatch(getProduct(data))
     } catch (error) {
       dispatch(console.error(error))
