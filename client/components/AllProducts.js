@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {thunkGetAllHouses} from '../store/treehouse'
+import {thunkGetAllHouses, addToCart} from '../store'
 
 class AllProducts extends Component {
   componentDidMount() {
@@ -8,13 +8,15 @@ class AllProducts extends Component {
   }
   render() {
     const treeHouses = this.props.treeHouses
-    console.log(this.props)
     return (
       <div>
         {treeHouses.map(house => (
           <div key={house.id}>
             {house.name} {house.price}
             <img src={house.imageUrl} />
+            <button onClick={() => this.props.addToCart(house)}>
+              Add To Cart
+            </button>
           </div>
         ))}
       </div>
@@ -30,7 +32,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getTreeHouses: () => dispatch(thunkGetAllHouses())
+    getTreeHouses: () => dispatch(thunkGetAllHouses()),
+    addToCart: house => dispatch(addToCart(house))
   }
 }
 
