@@ -6,10 +6,9 @@ import SingleProduct from './components/singleProductView'
 
 const App = () => {
   return (
-    <div>
+    <div className="main">
       <Navbar />
       <Routes />
-      <AllProducts />
     </div>
   )
 }
