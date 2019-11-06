@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const treehouseById = await Treehouse.findById(req.params.id)
+    const treehouseById = await Treehouse.findByPk(req.params.id)
     res.json(treehouseById)
   } catch (error) {
     console.error(error)
