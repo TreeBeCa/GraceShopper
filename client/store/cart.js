@@ -70,15 +70,27 @@ export const editingCart = id => {
 /**
  * REDUCER
  */
-export default function(state = initialState, action) {
+export default function(cart = [], action) {
   switch (action.type) {
-    case GET_PRODUCT:
-      return action.treeHouse
     case ADD_TO_CART:
-      return [...state, action.treeHouse]
-    case EDIT_CART:
-      return state.filter(houses => houses.id !== action.houseId)
+      if (cart.length !== 0) {
+        const matchingTreeHouse = cart.find(
+          element => element.treeHouse.id === action.treeHouse.id
+        )
+        if (matchingTreeHouse) {
+          return cart.map(element => {
+            if (element.treeHouse.id === action.treeHouse.id) {
+              element.quantity++
+              return element
+            }
+            return element
+          })
+        }
+      }
+      return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
+    // case EDIT_CART:
+    //   return state.filter(houses => houses.id !== action.houseId)
     default:
-      return state
+      return cart
   }
 }
