@@ -1,7 +1,8 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const {User, Cart} = require('../db/models')
 module.exports = router
 
+//mounted on api/users
 router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
@@ -15,3 +16,32 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/:userId', async (req, res, next) => {
+  try {
+    const singleUser = await User.findByPk(req.params.userId, {
+      include: [{model: Cart}]
+    })
+    console.log('singleUser', singleUser)
+    res.json(singleUser)
+  } catch (err) {
+    next(err)
+  }
+})
+
+// router.get('/:userId/cart', async (req, res, next) => {
+//   try {
+//     const usersCart = await User.findOne({
+//       include: [
+//         {
+//           model: Cart,
+//           where: { active: true }
+//         }
+//       ]
+//     })
+//     console.log('usersCart route', usersCart)
+//     res.json(usersCart)
+//   } catch (err) {
+//     next(err)
+//   }
+// })
