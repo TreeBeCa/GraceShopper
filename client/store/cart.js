@@ -90,6 +90,7 @@ export default function(cart = [], action) {
       return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
     // case EDIT_CART:
     //   return state.filter(houses => houses.id !== action.houseId)
+
     default:
       return cart
   }

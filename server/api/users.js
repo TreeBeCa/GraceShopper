@@ -29,19 +29,14 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-// router.get('/:userId/cart', async (req, res, next) => {
-//   try {
-//     const usersCart = await User.findOne({
-//       include: [
-//         {
-//           model: Cart,
-//           where: { active: true }
-//         }
-//       ]
-//     })
-//     console.log('usersCart route', usersCart)
-//     res.json(usersCart)
-//   } catch (err) {
-//     next(err)
-//   }
-// })
+router.get('/:userId/cart', async (req, res, next) => {
+  try {
+    const activeCart = await User.findByPk(req.params.userId, {
+      include: [{model: Cart, where: {active: true}}]
+    })
+    console.log('singleUser', activeCart)
+    res.json(activeCart)
+  } catch (err) {
+    next(err)
+  }
+})
