@@ -7,6 +7,7 @@ import history from '../history'
 const GET_PRODUCT = 'GET_PRODUCT'
 const ADD_TO_CART = 'ADD_TO_CART'
 const EDIT_CART = 'EDIT_CART'
+const VIEW_TREEHOUSECART = 'VIEW_TREEHOUSECART'
 
 /**
  * INITIAL STATE
@@ -31,6 +32,10 @@ export const editCart = houseId => ({
   houseId
 })
 
+export const viewTreehouseCart = cartId => ({
+  type: VIEW_TREEHOUSECART,
+  cartId
+})
 /**
  * THUNK CREATORS
  */
@@ -67,6 +72,18 @@ export const editingCart = id => {
   }
 }
 
+export const treehouseCartThunk = cartId => {
+  return async dispatch => {
+    try {
+      console.log('inside treehouseCartThunk')
+      const {data} = await axios.get(`/api/cart`)
+      dispatch(viewTreehouseCart(data))
+    } catch (error) {
+      dispatch(console.error(error))
+    }
+  }
+}
+
 /**
  * REDUCER
  */
@@ -90,7 +107,9 @@ export default function(cart = [], action) {
       return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
     // case EDIT_CART:
     //   return state.filter(houses => houses.id !== action.houseId)
-
+    case VIEW_TREEHOUSECART: {
+      return action.cartId
+    }
     default:
       return cart
   }
