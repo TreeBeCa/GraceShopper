@@ -40,3 +40,5 @@ router.get('/:userId/cart', async (req, res, next) => {
     next(err)
   }
 })
+
+// '/guest/cart'

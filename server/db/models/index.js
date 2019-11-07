@@ -12,6 +12,9 @@ const Cart = require('./cart')
 Cart.belongsTo(User)
 User.hasMany(Cart)
 
+Treehouse.belongsToMany(Cart, {through: 'TreehouseCart'})
+Cart.belongsToMany(Treehouse, {through: 'TreehouseCart'})
+
 /**
  * We'll export all of our models here, so that any time a module needs a model,
  * we can just require it from 'db/models'
