@@ -8,6 +8,7 @@ const GET_PRODUCT = 'GET_PRODUCT'
 const ADD_TO_CART = 'ADD_TO_CART'
 const EDIT_CART = 'EDIT_CART'
 const VIEW_TREEHOUSECART = 'VIEW_TREEHOUSECART'
+const CREATE_NEW_CART = 'CREATE_NEW_CART'
 
 /**
  * INITIAL STATE
@@ -35,6 +36,10 @@ export const editCart = houseId => ({
 export const viewTreehouseCart = cartId => ({
   type: VIEW_TREEHOUSECART,
   cartId
+})
+
+export const createNewCart = () => ({
+  type: CREATE_NEW_CART
 })
 /**
  * THUNK CREATORS
@@ -109,6 +114,9 @@ export default function(cart = [], action) {
     //   return state.filter(houses => houses.id !== action.houseId)
     case VIEW_TREEHOUSECART: {
       return action.cartId
+    }
+    case CREATE_NEW_CART: {
+      return [] //save old cart in the future
     }
     default:
       return cart

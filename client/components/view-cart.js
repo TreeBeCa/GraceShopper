@@ -3,18 +3,6 @@ import {connect} from 'react-redux'
 import {treehouseCartThunk} from '../store'
 
 class ViewCart extends Component {
-  // constructor() {
-  //   super()
-  //   this.state = {
-  //     cart: [
-  //       {
-  //         treeHouse: {name: 'best treehouse'},
-  //         quantity: 1
-  //       }
-  //     ]
-  //   }
-  // }
-
   componentDidMount() {
     this.props.getTreehouseCart()
   }

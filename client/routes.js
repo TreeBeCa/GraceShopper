@@ -10,7 +10,7 @@ import {
   AllProducts,
   UserCart
 } from './components'
-import {me} from './store'
+import {me, treehouseCartThunk, getCartThunk, createNewCart} from './store'
 
 /**
  * COMPONENT
@@ -18,10 +18,17 @@ import {me} from './store'
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
+    if (this.props.isLoggedIn) {
+      this.props.getUserCart(this.props.user.id)
+    } else {
+      this.props.getNewCart()
+    }
   }
 
   render() {
     const {isLoggedIn} = this.props
+    console.log('routes props', this.props)
+    // const userId = this.props.user.id ||
 
     return (
       <Switch>
@@ -30,11 +37,12 @@ class Routes extends Component {
         <Route path="/signup" component={Signup} />
         <Route exact path="/treehouses" component={AllProducts} />
         <Route exact path="/cart" component={ViewCart} />
-        <Route path="/users/:userId/cart" component={UserCart} />
+
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
+            <Route path="/users/:userId/cart" component={UserCart} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
@@ -51,7 +59,8 @@ const mapState = state => {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    user: state.user
   }
 }
 
@@ -59,9 +68,14 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me())
-    }
+    },
+    getUserCart: userId => dispatch(getCartThunk(userId)),
+    getNewCart: () => dispatch(createNewCart())
   }
 }
+
+// (dispatch, props) => {
+//   const userId = props.match.params.userId
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
