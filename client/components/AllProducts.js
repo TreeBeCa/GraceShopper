@@ -9,11 +9,13 @@ class AllProducts extends Component {
   render() {
     const treeHouses = this.props.treeHouses
     return (
-      <div>
+      <div className="TreeHouseContainer">
         {treeHouses.map(house => (
-          <div key={house.id}>
-            {house.name} {house.price}
+          <div className="SingleTreeHouse" key={house.id}>
+            <h2>{house.name}</h2> ${house.price}
+            <br />
             <img src={house.imageUrl} />
+            <br />
             <button onClick={() => this.props.addToCart(house)}>
               Add To Cart
             </button>
