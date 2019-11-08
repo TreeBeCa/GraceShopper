@@ -16,7 +16,7 @@ class AllProducts extends Component {
             <br />
             <img src={house.imageUrl} />
             <br />
-            <button onClick={() => this.props.addToCart(house)}>
+            <button type="button" onClick={() => this.props.addToCart(house)}>
               Add To Cart
             </button>
           </div>
@@ -28,7 +28,8 @@ class AllProducts extends Component {
 
 const mapStateToProps = state => {
   return {
-    treeHouses: state.treeHouses
+    treeHouses: state.treeHouses,
+    cart: state.cart
   }
 }
 

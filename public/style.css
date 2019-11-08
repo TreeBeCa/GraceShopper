@@ -70,6 +70,15 @@ form div {
   width: 100px;
 }
 
+/* .checkout  */
+table {
+  width: 50%;
+}
+
+tr td {
+  border: 1px solid black;
+}
+
 /* .form {
    display:flex;
   flex-direction: row-reverse;
