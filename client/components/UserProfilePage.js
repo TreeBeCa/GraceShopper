@@ -5,9 +5,9 @@ import {connect} from 'react-redux'
 /**
  * COMPONENT
  */
-export const UserProfilePage = props => {
+function UserProfilePage(props) {
   // const {} = props
-
+  console.log('props: ', props)
   return (
     <div>
       <h3>Welcome to Profile Page</h3>
