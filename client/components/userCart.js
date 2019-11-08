@@ -7,6 +7,17 @@ class UserCart extends Component {
   render() {
     console.log('props in userCart', this.props)
     const cart = this.props.cart
+    console.log('cart-> ', cart)
+    let cartPriceTotal = 0
+    if (cart.length) {
+      cart.forEach(element => {
+        let treeHousePrice = element.treeHouse.price
+        let quantity = element.quantity
+        let total = treeHousePrice * quantity
+        cartPriceTotal += total
+      })
+    }
+    console.log('carPriceTotal->', cartPriceTotal)
     if (cart.length) {
       return (
         <div>
@@ -27,7 +38,10 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-          {this.props.isLoggedIn ? (
+        
+          <div>Total Price:{cartPriceTotal}</div>
+
+        {this.props.isLoggedIn ? (
             <button
               type="button"
               onClick={() => {
@@ -40,6 +54,7 @@ class UserCart extends Component {
           ) : (
             <h3>please log in or create an account to check out</h3>
           )}
+
         </div>
       )
     } else {
