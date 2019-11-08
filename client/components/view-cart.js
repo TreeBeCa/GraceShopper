@@ -3,9 +3,9 @@ import {connect} from 'react-redux'
 import {treehouseCartThunk} from '../store'
 
 class ViewCart extends Component {
-  componentDidMount() {
-    this.props.getTreehouseCart()
-  }
+  // componentDidMount() {
+  //   this.props.getTreehouseCart()
+  // }
 
   render() {
     // const cart = this.state.cart

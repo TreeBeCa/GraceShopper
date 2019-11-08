@@ -1,34 +1,45 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {getCartThunk} from '../store'
+import {getUserCartThunk, createNewCart} from '../store'
 
 class UserCart extends Component {
   componentDidMount() {
-    this.props.getUserCart()
+    if (this.props.user.id) {
+      this.props.getUserCart(this.props.user.id)
+    } else {
+      this.props.createNewCart()
+    }
   }
 
   render() {
-    const cart = this.props.user.carts || []
-    return (
-      <div>
-        <h1>inside user cart</h1>
-        {/* later we will replace curr.id with the actual treehouse object */}
-        {cart.map(curr => curr.id)}
-      </div>
-    )
+    const cart = this.props.cart
+    if (cart.treehouses) {
+      return (
+        <div>
+          <h1>inside user cart</h1>
+          {/* later we will replace curr.id with the actual treehouse object */}
+          <h2>{cart.treehouses[0].name}</h2>
+        </div>
+      )
+    } else {
+      return <h1>Your cart is empty</h1>
+    }
   }
 }
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    cart: state.cart
   }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
-  const userId = props.match.params.userId
+  console.log('userCart props in mapProps:', props)
   return {
-    getUserCart: () => dispatch(getCartThunk(userId))
+    //treeehouseCartThunk () =>
+    getUserCart: userId => dispatch(getUserCartThunk(userId)),
+    createNewCart: () => dispatch(createNewCart())
   }
 }
 

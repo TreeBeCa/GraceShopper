@@ -11,8 +11,7 @@ import {
   AllProducts,
   UserCart
 } from './components'
-import {me, treehouseCartThunk, getCartThunk, createNewCart} from './store'
-
+import {me, getUserCart, createNewCart} from './store'
 
 /**
  * COMPONENT
@@ -20,11 +19,6 @@ import {me, treehouseCartThunk, getCartThunk, createNewCart} from './store'
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
-    if (this.props.isLoggedIn) {
-      this.props.getUserCart(this.props.user.id)
-    } else {
-      this.props.getNewCart()
-    }
   }
 
   render() {
@@ -38,11 +32,16 @@ class Routes extends Component {
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/" component={AllProducts} />
+        <Route
+          exact
+          path="/cart"
+          render={() => <UserCart user={this.props.user} />}
+        />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route exact path="/home" component={UserHome} />
-            <Route path="/users/:userId/cart" component={UserCart} />
+            {/* <Route path="/users/:userId/cart" component={UserCart} /> */}
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
@@ -68,9 +67,7 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me())
-    },
-    getUserCart: userId => dispatch(getCartThunk(userId)),
-    getNewCart: () => dispatch(createNewCart())
+    }
   }
 }
 

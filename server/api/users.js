@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User, Cart} = require('../db/models')
+const {User, Cart, Treehouse} = require('../db/models')
 module.exports = router
 
 //mounted on api/users
@@ -29,13 +29,38 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-router.get('/:userId/cart', async (req, res, next) => {
+router.get('/:userId/activeCart', async (req, res, next) => {
   try {
-    const activeCart = await User.findByPk(req.params.userId, {
+    const data = await User.findByPk(req.params.userId, {
       include: [{model: Cart, where: {active: true}}]
     })
-    console.log('singleUser', activeCart)
-    res.json(activeCart)
+    // console.log('singleUser', activeCart)
+    const activeCartId = data.carts[0].id
+    const treehousesInCart = await Cart.findByPk(activeCartId, {
+      include: [{model: Treehouse}]
+    })
+    res.json(treehousesInCart)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:userId/carts', async (req, res, next) => {
+  try {
+    const data = await User.findByPk(req.params.userId, {
+      include: [{model: Cart}]
+    })
+    const carts = data.carts
+    const treehousesInCarts = await Promise.all(
+      carts.map(cart => Cart.findByPk(cart.id), {
+        include: [{model: Treehouse}]
+      })
+    )
+
+    // let treehousesInCart;
+    // carts.forEach(cart => treehousesInCart.push(await Cart.findByPk(cart.id)))
+
+    res.json(treehousesInCarts)
   } catch (err) {
     next(err)
   }
