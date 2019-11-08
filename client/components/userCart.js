@@ -3,11 +3,16 @@ import {connect} from 'react-redux'
 
 class UserCart extends Component {
   render() {
+    console.log('props in userCart', this.props)
     const cart = this.props.cart
     if (cart.length) {
       return (
         <div>
-          <h1>Welcome to your cart</h1>
+          {this.props.isLoggedIn ? (
+            <h1>Welcome to your cart {this.props.user.email}! </h1>
+          ) : (
+            <h1>Welcome to your cart, Guest!</h1>
+          )}
           <table className="checkout">
             <tbody>
               {cart.map((elem, index) => (
@@ -30,7 +35,8 @@ class UserCart extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    cart: state.cart
+    cart: state.cart,
+    isLoggedIn: !!state.user.id
   }
 }
 

@@ -17,8 +17,6 @@ class Routes extends Component {
 
   render() {
     const {isLoggedIn} = this.props
-    console.log('routes props', this.props)
-    // const userId = this.props.user.id ||
 
     return (
       <Switch>
@@ -26,7 +24,7 @@ class Routes extends Component {
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/" component={AllProducts} />
-        <Route path="/cart" component={UserCart} />
+        <Route path="/cart" render={() => <UserCart />} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
@@ -57,7 +55,6 @@ const mapDispatch = dispatch => {
     loadInitialData() {
       dispatch(me())
     },
-    getUserCart: userId => dispatch(getCartThunk(userId)),
     getNewCart: () => dispatch(createNewCart())
   }
 }
