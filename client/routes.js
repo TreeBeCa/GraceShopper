@@ -13,18 +13,13 @@ import {
 } from './components'
 import {me, treehouseCartThunk, getCartThunk, createNewCart} from './store'
 
-
 /**
  * COMPONENT
  */
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
-    if (this.props.isLoggedIn) {
-      this.props.getUserCart(this.props.user.id)
-    } else {
-      this.props.getNewCart()
-    }
+    this.props.getNewCart()
   }
 
   render() {
@@ -38,11 +33,11 @@ class Routes extends Component {
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/" component={AllProducts} />
+        <Route path="/cart" component={UserCart} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route exact path="/home" component={UserHome} />
-            <Route path="/users/:userId/cart" component={UserCart} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
