@@ -39,6 +39,7 @@ router.post('/logout', (req, res) => {
 })
 
 router.get('/me', (req, res) => {
+  console.log('req.user inside auth file', req.user)
   res.json(req.user)
 })
 
