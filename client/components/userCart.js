@@ -5,6 +5,17 @@ class UserCart extends Component {
   render() {
     console.log('props in userCart', this.props)
     const cart = this.props.cart
+    console.log('cart-> ', cart)
+    let cartPriceTotal = 0
+    if (cart.length) {
+      cart.forEach(element => {
+        let treeHousePrice = element.treeHouse.price
+        let quantity = element.quantity
+        let total = treeHousePrice * quantity
+        cartPriceTotal += total
+      })
+    }
+    console.log('carPriceTotal->', cartPriceTotal)
     if (cart.length) {
       return (
         <div>
@@ -24,6 +35,7 @@ class UserCart extends Component {
               ))}
             </tbody>
           </table>
+          <div>Total Price:{cartPriceTotal}</div>
         </div>
       )
     } else {
