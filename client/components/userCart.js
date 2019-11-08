@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
+import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
+import {checkout} from '../store'
 
 class UserCart extends Component {
   render() {
@@ -35,7 +37,24 @@ class UserCart extends Component {
               ))}
             </tbody>
           </table>
+
+        
           <div>Total Price:{cartPriceTotal}</div>
+
+        {this.props.isLoggedIn ? (
+            <button
+              type="button"
+              onClick={() => {
+                this.props.checkout()
+                this.props.history.push('/checkedOut')
+              }}
+            >
+              check out
+            </button>
+          ) : (
+            <h3>please log in or create an account to check out</h3>
+          )}
+
         </div>
       )
     } else {
@@ -52,4 +71,12 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(UserCart)
+const mapDispatch = dispatch => {
+  return {
+    checkout: () => {
+      dispatch(checkout())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatch)(UserCart)
