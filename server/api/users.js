@@ -39,7 +39,19 @@ router.get('/:userId/activeCart', async (req, res, next) => {
     const treehousesInCart = await Cart.findByPk(activeCartId, {
       include: [{model: Treehouse}]
     })
-    res.json(treehousesInCart)
+    res.json(
+      treehousesInCart.treehouses.map(treehouse => {
+        return {
+          treehouse: {
+            id: treehouse.id,
+            name: treehouse.name,
+            price: treehouse.price,
+            description: treehouse.description
+          },
+          quantity: treehouse.TreehouseCart.quantity
+        }
+      })
+    )
   } catch (err) {
     next(err)
   }

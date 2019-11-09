@@ -28,8 +28,8 @@ class UserCart extends Component {
           )}
           <table className="checkout">
             <tbody>
-              {cart.map((elem, index) => (
-                <tr key={index}>
+              {cart.map(elem => (
+                <tr key={elem.treehouse.id}>
                   <td>{elem.treeHouse.name}</td>
                   <td>{elem.treeHouse.price}</td>
                   <td>{elem.quantity}</td>
