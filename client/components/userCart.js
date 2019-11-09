@@ -28,8 +28,8 @@ class UserCart extends Component {
           )}
           <table className="checkout">
             <tbody>
-              {cart.map((elem, index) => (
-                <tr key={index}>
+              {cart.map(elem => (
+                <tr key={elem.treehouse.id}>
                   <td>{elem.treeHouse.name}</td>
                   <td>{elem.treeHouse.price}</td>
                   <td>{elem.quantity}</td>
@@ -38,14 +38,14 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-        
           <div>Total Price:{cartPriceTotal}</div>
 
-        {this.props.isLoggedIn ? (
+          {this.props.isLoggedIn ? (
             <button
               type="button"
               onClick={() => {
                 this.props.checkout()
+                console.log('still here')
                 this.props.history.push('/checkedOut')
               }}
             >
@@ -54,7 +54,6 @@ class UserCart extends Component {
           ) : (
             <h3>please log in or create an account to check out</h3>
           )}
-
         </div>
       )
     } else {
