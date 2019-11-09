@@ -4,7 +4,7 @@ import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import {Login, Signup, UserHome, AllProducts, UserCart} from './components'
-import {me, createNewCart} from './store'
+import {me, createNewCart, getUserCartThunk} from './store'
 
 /**
  * COMPONENT
@@ -12,7 +12,7 @@ import {me, createNewCart} from './store'
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
-    this.props.getNewCart()
+    //this.props.getNewCart()
   }
 
   render() {

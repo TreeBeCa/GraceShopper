@@ -6,7 +6,6 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
-// const GET_CART = 'GET_CART'
 
 /**
  * INITIAL STATE
@@ -16,20 +15,27 @@ const defaultUser = {}
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({type: GET_USER, user})
+const getUser = (user, cart) => ({type: GET_USER, user, cart})
 const removeUser = () => ({type: REMOVE_USER})
-// export const getCart = userId => ({
-//   type: GET_CART,
-//   userId
-// })
 
 /**
  * THUNK CREATORS
  */
 export const me = () => async dispatch => {
   try {
+    //get data of logged in user
     const res = await axios.get('/auth/me')
-    dispatch(getUser(res.data || defaultUser))
+
+    let user = defaultUser
+    let cart = []
+    //if thre is a logged in used, also get their cart
+    if (res.data) {
+      user = res.data
+      const cartRes = await axios.get(`/api/users/${user.id}/activeCart`)
+      cart = cartRes.data
+    }
+    //dispatch getUser with the user and their cart
+    dispatch(getUser(user, cart))
   } catch (err) {
     console.error(err)
   }

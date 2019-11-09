@@ -4,12 +4,11 @@ import history from '../history'
 /**
  * ACTION TYPES
  */
-const GET_PRODUCT = 'GET_PRODUCT'
 const ADD_TO_CART = 'ADD_TO_CART'
-const EDIT_CART = 'EDIT_CART'
 const LOAD_USER_CART = 'LOAD_USER_CART'
 const CREATE_NEW_CART = 'CREATE_NEW_CART'
 const CHECKOUT = 'CHECKOUT'
+const GET_USER = 'GET_USER'
 
 /**
  * INITIAL STATE
@@ -19,33 +18,25 @@ const initialState = []
 /**
  * ACTION CREATORS
  */
-// export const getProduct = treeHouse => ({
-//   type: GET_PRODUCT,
-//   treeHouse
-// })
 
-// export const addToCart = treeHouse => ({
-//   type: ADD_TO_CART,
-//   treeHouse
-// })
-
-// export const editCart = houseId => ({
-//   type: EDIT_CART,
-//   houseId
-// })
+export const createNewCart = () => ({
+  type: CREATE_NEW_CART
+})
 
 const loadUserCart = cart => ({
   type: LOAD_USER_CART,
   cart
 })
 
-export const createNewCart = () => ({
-  type: CREATE_NEW_CART
+export const addToCart = treehouse => ({
+  type: ADD_TO_CART,
+  treehouse
 })
 
 export const checkout = () => ({
   type: CHECKOUT
 })
+
 /**
  * THUNK CREATORS
  */
@@ -112,12 +103,12 @@ export default function(cart = {}, action) {
   switch (action.type) {
     case ADD_TO_CART:
       if (cart.length !== 0) {
-        const matchingTreeHouse = cart.find(
-          element => element.treeHouse.id === action.treeHouse.id
+        const matchingTreehouse = cart.find(
+          element => element.treehouse.id === action.treehouse.id
         )
-        if (matchingTreeHouse) {
+        if (matchingTreehouse) {
           return cart.map(element => {
-            if (element.treeHouse.id === action.treeHouse.id) {
+            if (element.treehouse.id === action.treehouse.id) {
               element.quantity++
               return element
             }
@@ -125,15 +116,13 @@ export default function(cart = {}, action) {
           })
         }
       }
-      return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
-    // case EDIT_CART:
-    //   return state.filter(houses => houses.id !== action.houseId)
-    case LOAD_USER_CART: {
+      return [...cart, {treehouse: action.treehouse, quantity: 1}]
+    case LOAD_USER_CART:
       return action.cart
-    }
-    case CREATE_NEW_CART: {
-      return {} //save old cart in the future
-    }
+    case CREATE_NEW_CART:
+      return [] //save old cart in the future
+    case GET_USER:
+      return action.cart
     case CHECKOUT:
       return []
     default:

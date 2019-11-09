@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {checkout} from '../store'
 
@@ -11,9 +10,9 @@ class UserCart extends Component {
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
-        let treeHousePrice = element.treeHouse.price
+        let treehousePrice = element.treehouse.price
         let quantity = element.quantity
-        let total = treeHousePrice * quantity
+        let total = treehousePrice * quantity
         cartPriceTotal += total
       })
     }
@@ -30,8 +29,8 @@ class UserCart extends Component {
             <tbody>
               {cart.map(elem => (
                 <tr key={elem.treehouse.id}>
-                  <td>{elem.treeHouse.name}</td>
-                  <td>{elem.treeHouse.price}</td>
+                  <td>{elem.treehouse.name}</td>
+                  <td>{elem.treehouse.price}</td>
                   <td>{elem.quantity}</td>
                 </tr>
               ))}
