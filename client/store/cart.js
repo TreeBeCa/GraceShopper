@@ -9,6 +9,7 @@ const ADD_TO_CART = 'ADD_TO_CART'
 const EDIT_CART = 'EDIT_CART'
 const LOAD_USER_CART = 'LOAD_USER_CART'
 const CREATE_NEW_CART = 'CREATE_NEW_CART'
+const CHECKOUT = 'CHECKOUT'
 
 /**
  * INITIAL STATE
@@ -40,6 +41,10 @@ const loadUserCart = cart => ({
 
 export const createNewCart = () => ({
   type: CREATE_NEW_CART
+})
+
+export const checkout = () => ({
+  type: CHECKOUT
 })
 /**
  * THUNK CREATORS
@@ -129,6 +134,8 @@ export default function(cart = {}, action) {
     case CREATE_NEW_CART: {
       return {} //save old cart in the future
     }
+    case CHECKOUT:
+      return []
     default:
       return cart
   }

@@ -1,24 +1,58 @@
 import React, {Component} from 'react'
+import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {getUserCartThunk, createNewCart} from '../store'
+import {checkout} from '../store'
 
 class UserCart extends Component {
-  componentDidMount() {
-    if (this.props.user.id) {
-      this.props.getUserCart(this.props.user.id)
-    } else {
-      this.props.createNewCart()
-    }
-  }
-
   render() {
+    console.log('props in userCart', this.props)
     const cart = this.props.cart
-    if (cart.treehouses) {
+    console.log('cart-> ', cart)
+    let cartPriceTotal = 0
+    if (cart.length) {
+      cart.forEach(element => {
+        let treeHousePrice = element.treeHouse.price
+        let quantity = element.quantity
+        let total = treeHousePrice * quantity
+        cartPriceTotal += total
+      })
+    }
+    console.log('carPriceTotal->', cartPriceTotal)
+    if (cart.length) {
       return (
         <div>
-          <h1>inside user cart</h1>
-          {/* later we will replace curr.id with the actual treehouse object */}
-          <h2>{cart.treehouses[0].name}</h2>
+          {this.props.isLoggedIn ? (
+            <h1>Welcome to your cart {this.props.user.email}! </h1>
+          ) : (
+            <h1>Welcome to your cart, Guest!</h1>
+          )}
+          <table className="checkout">
+            <tbody>
+              {cart.map((elem, index) => (
+                <tr key={index}>
+                  <td>{elem.treeHouse.name}</td>
+                  <td>{elem.treeHouse.price}</td>
+                  <td>{elem.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div>Total Price:{cartPriceTotal}</div>
+
+          {this.props.isLoggedIn ? (
+            <button
+              type="button"
+              onClick={() => {
+                this.props.checkout()
+                this.props.history.push('/checkedOut')
+              }}
+            >
+              check out
+            </button>
+          ) : (
+            <h3>please log in or create an account to check out</h3>
+          )}
         </div>
       )
     } else {
@@ -30,17 +64,17 @@ class UserCart extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    cart: state.cart
+    cart: state.cart,
+    isLoggedIn: !!state.user.id
   }
 }
 
-const mapDispatchToProps = (dispatch, props) => {
-  console.log('userCart props in mapProps:', props)
+const mapDispatch = dispatch => {
   return {
-    //treeehouseCartThunk () =>
-    getUserCart: userId => dispatch(getUserCartThunk(userId)),
-    createNewCart: () => dispatch(createNewCart())
+    checkout: () => {
+      dispatch(checkout())
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCart)
+export default connect(mapStateToProps, mapDispatch)(UserCart)

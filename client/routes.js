@@ -3,15 +3,8 @@ import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import {
-  Login,
-  Signup,
-  UserHome,
-  ViewCart,
-  AllProducts,
-  UserCart
-} from './components'
-import {me, getUserCart, createNewCart} from './store'
+import {Login, Signup, UserHome, AllProducts, UserCart} from './components'
+import {me, createNewCart} from './store'
 
 /**
  * COMPONENT
@@ -19,12 +12,11 @@ import {me, getUserCart, createNewCart} from './store'
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
+    this.props.getNewCart()
   }
 
   render() {
     const {isLoggedIn} = this.props
-    console.log('routes props', this.props)
-    // const userId = this.props.user.id ||
 
     return (
       <Switch>
@@ -33,15 +25,13 @@ class Routes extends Component {
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/" component={AllProducts} />
         <Route
-          exact
           path="/cart"
-          render={() => <UserCart user={this.props.user} />}
+          render={routeProps => <UserCart {...routeProps} />}
         />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route exact path="/home" component={UserHome} />
-            {/* <Route path="/users/:userId/cart" component={UserCart} /> */}
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
@@ -67,7 +57,8 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me())
-    }
+    },
+    getNewCart: () => dispatch(createNewCart())
   }
 }
 
