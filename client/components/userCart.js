@@ -4,15 +4,15 @@ import {connect} from 'react-redux'
 import {checkout, removeTreeHouse} from '../store'
 
 class UserCart extends Component {
-  deleteButtton(houseId) {
+  deleteButtton(id) {
     try {
-      this.props.removeTreeHouse(houseId)
+      this.props.removeTreeHouse(id)
     } catch (error) {
       console.error(error)
     }
   }
   render() {
-    console.log('props in userCart', this.props)
+    // console.log('props in userCart', this.props)
     const cart = this.props.cart
     // console.log('cart-> ', cart)
     let cartPriceTotal = 0
@@ -24,9 +24,9 @@ class UserCart extends Component {
         cartPriceTotal += total
       })
     }
-    console.log('carPriceTotal->', cartPriceTotal)
+    // console.log('carPriceTotal->', cartPriceTotal)
     if (cart.length) {
-      console.log('cart-> ', cart)
+      // console.log('cart-> ', cart)
       return (
         <div>
           {this.props.isLoggedIn ? (
