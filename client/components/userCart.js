@@ -1,8 +1,16 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {checkout, saveUserCartThunk} from '../store'
+import {checkout, removeTreeHouse, saveUserCartThunk} from '../store'
 
 class UserCart extends Component {
+  deleteButtton(houseId) {
+    try {
+      this.props.removeTreeHouse(houseId)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   render() {
     const cart = this.props.cart
     let cartPriceTotal = 0
@@ -29,6 +37,16 @@ class UserCart extends Component {
                   <td>{elem.treehouse.name}</td>
                   <td>{elem.treehouse.price / 100}</td>
                   <td>{elem.quantity}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        this.deleteButtton(elem.treehouse.id)
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -79,7 +97,10 @@ const mapStateToProps = state => {
 const mapDispatch = dispatch => {
   return {
     checkout: () => dispatch(checkout()),
-    saveUserCart: (id, cart) => dispatch(saveUserCartThunk(id, cart))
+    saveUserCart: (id, cart) => dispatch(saveUserCartThunk(id, cart)),
+    removeTreeHouse: id => {
+      dispatch(removeTreeHouse(id))
+    }
   }
 }
 

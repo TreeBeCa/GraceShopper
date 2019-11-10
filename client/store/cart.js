@@ -9,6 +9,12 @@ const CREATE_NEW_CART = 'CREATE_NEW_CART'
 const CHECKOUT = 'CHECKOUT'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+const REMOVE_TREEHOUSE = 'REMOVE_TREEHOUSE'
+
+/**
+ * INITIAL STATE
+ */
+const initialState = []
 
 /**
  * ACTION CREATORS
@@ -25,6 +31,11 @@ export const addToCart = treehouse => ({
 
 export const checkout = () => ({
   type: CHECKOUT
+})
+
+export const removeTreeHouse = houseId => ({
+  type: REMOVE_TREEHOUSE,
+  houseId
 })
 
 /**
@@ -50,6 +61,17 @@ export const saveUserCartThunk = (userId, cart) => async dispatch => {
     await axios.put(`/api/users/${userId}/activeCart`, cart)
   } catch (error) {
     dispatch(console.error(error))
+  }
+}
+
+export const editingCart = id => {
+  return async dispatch => {
+    try {
+      const {data} = await axios.delete(`/api/cart-view/${id}`)
+      dispatch(removeTreeHouse(data))
+    } catch (error) {
+      dispatch(console.error(error))
+    }
   }
 }
 /**
@@ -78,6 +100,15 @@ export default function(cart = [], action) {
       return []
     case GET_USER:
       return action.cart
+    case REMOVE_TREEHOUSE:
+      // eslint-disable-next-line no-case-declarations
+      const newState = Object.assign([], cart)
+      // eslint-disable-next-line no-case-declarations
+      const indexOfHouse = cart.findIndex(element => {
+        return element.id === action.houseId
+      })
+      newState.splice(indexOfHouse, 1)
+      return newState
     case CHECKOUT:
       return []
     case REMOVE_USER:
