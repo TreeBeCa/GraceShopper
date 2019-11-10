@@ -7,7 +7,7 @@ class UserCart extends Component {
   render() {
     console.log('props in userCart', this.props)
     const cart = this.props.cart
-    console.log('cart-> ', cart)
+    // console.log('cart-> ', cart)
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
@@ -19,6 +19,7 @@ class UserCart extends Component {
     }
     console.log('carPriceTotal->', cartPriceTotal)
     if (cart.length) {
+      console.log('cart-> ', cart)
       return (
         <div>
           {this.props.isLoggedIn ? (
@@ -29,7 +30,7 @@ class UserCart extends Component {
           <table className="checkout">
             <tbody>
               {cart.map(elem => (
-                <tr key={elem.treehouse.id}>
+                <tr key={elem.treeHouse.id}>
                   <td>{elem.treeHouse.name}</td>
                   <td>{elem.treeHouse.price}</td>
                   <td>{elem.quantity}</td>
