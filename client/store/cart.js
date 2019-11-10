@@ -117,7 +117,9 @@ export default function(cart = [], action) {
       }
       return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
     case REMOVE_TREEHOUSE:
+      // eslint-disable-next-line no-case-declarations
       const newState = Object.assign([], cart)
+      // eslint-disable-next-line no-case-declarations
       const indexOfHouse = cart.findIndex(element => {
         return element.id === action.houseId
       })
