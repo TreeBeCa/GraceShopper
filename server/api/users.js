@@ -22,7 +22,6 @@ router.get('/:userId', async (req, res, next) => {
     const singleUser = await User.findByPk(req.params.userId, {
       include: [{model: Cart}]
     })
-    console.log('singleUser', singleUser)
     res.json(singleUser)
   } catch (err) {
     next(err)
@@ -32,28 +31,78 @@ router.get('/:userId', async (req, res, next) => {
 router.get('/:userId/activeCart', async (req, res, next) => {
   try {
     const data = await User.findByPk(req.params.userId, {
-      include: [{model: Cart, where: {active: true}}]
+      include: [{model: Cart}]
     })
-    // console.log('singleUser', activeCart)
-    const activeCartId = data.carts[0].id
-    const treehousesInCart = await Cart.findByPk(activeCartId, {
-      include: [{model: Treehouse}]
-    })
-    res.json(
-      treehousesInCart.treehouses.map(treehouse => {
-        return {
-          treehouse: {
-            id: treehouse.id,
-            name: treehouse.name,
-            price: treehouse.price,
-            description: treehouse.description
-          },
-          quantity: treehouse.TreehouseCart.quantity
-        }
+    const activeCart = data.carts.find(cart => cart.active === true)
+
+    if (activeCart) {
+      const activeCartId = activeCart.id
+      const treehousesInCart = await Cart.findByPk(activeCartId, {
+        include: [{model: Treehouse}]
       })
-    )
+      res.json(
+        treehousesInCart.treehouses.map(treehouse => {
+          return {
+            treehouse: {
+              id: treehouse.id,
+              name: treehouse.name,
+              price: treehouse.price,
+              description: treehouse.description
+            },
+            quantity: treehouse.TreehouseCart.quantity
+          }
+        })
+      )
+    } else {
+      res.json([])
+    }
   } catch (err) {
     next(err)
+  }
+})
+
+router.put('/:userId/activeCart', async (req, res, next) => {
+  const newCartData = req.body
+  try {
+    // find user's current 'active cart', if any
+    const user = await User.findByPk(req.params.userId, {
+      include: [{model: Cart}]
+    })
+    const activeCart = user.carts.find(cart => cart.active === true)
+
+    let cart
+    if (activeCart) {
+      const activeCartId = user.carts[0].id
+      cart = await Cart.findByPk(activeCartId, {
+        include: [{model: Treehouse}]
+      })
+    } else {
+      cart = await Cart.create({active: true})
+      await cart.setUser(user)
+    }
+
+    // remove all the old order treehouses
+    // for some reason this doesn't seem to work :(
+    cart.treehouses.forEach(async treehouse => {
+      await cart.removeTreehouse(treehouse)
+    })
+    console.log('empty cart:', cart)
+    console.log('empty cart:', cart)
+
+    // add in the new treehouses
+    newCartData.forEach(async function(elem) {
+      try {
+        await cart.addTreehouse(elem.treehouse.id, {
+          through: {quantity: elem.quantity}
+        })
+      } catch (error) {
+        next(error)
+      }
+    })
+
+    res.sendStatus(200)
+  } catch (error) {
+    next(error)
   }
 })
 

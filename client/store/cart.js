@@ -5,15 +5,10 @@ import history from '../history'
  * ACTION TYPES
  */
 const ADD_TO_CART = 'ADD_TO_CART'
-const LOAD_USER_CART = 'LOAD_USER_CART'
 const CREATE_NEW_CART = 'CREATE_NEW_CART'
 const CHECKOUT = 'CHECKOUT'
 const GET_USER = 'GET_USER'
-
-/**
- * INITIAL STATE
- */
-const initialState = []
+const REMOVE_USER = 'REMOVE_USER'
 
 /**
  * ACTION CREATORS
@@ -21,11 +16,6 @@ const initialState = []
 
 export const createNewCart = () => ({
   type: CREATE_NEW_CART
-})
-
-const loadUserCart = cart => ({
-  type: LOAD_USER_CART,
-  cart
 })
 
 export const addToCart = treehouse => ({
@@ -41,65 +31,32 @@ export const checkout = () => ({
  * THUNK CREATORS
  */
 
-export const getUserCartThunk = userId => async dispatch => {
+export const checkoutThunk = (userId, cart) => async dispatch => {
   try {
-    const {data} = await axios.get(`/api/users/${userId}/activeCart`)
-    // TODO: parse data??
-    dispatch(loadUserCart(data))
+    /***
+     * TODO: save the user's cart with active: false
+     * and then dispatch the checkout action creator
+     * to clear the store
+     * */
   } catch (error) {
     dispatch(console.error(error))
   }
 }
 
-// export const getSingleProduct = id => {
-//   return async dispatch => {
-//     try {
-//       const {data} = await axios.get(`/api/treehouses/${id}`)
-//       dispatch(getProduct(data))
-//     } catch (error) {
-//       dispatch(console.error(error))
-//     }
-//   }
-// }
-
-// export const addingToCart = treeHouse => {
-//   return async dispatch => {
-//     try {
-//       const {data} = await axios.post('/api/cart-view', treeHouse)
-//       dispatch(addToCart(data))
-//     } catch (error) {
-//       dispatch(console.error(error))
-//     }
-//   }
-// }
-
-// export const editingCart = id => {
-//   return async dispatch => {
-//     try {
-//       const {data} = await axios.delete(`/api/cart-view/${id}`)
-//       dispatch(editCart(data))
-//     } catch (error) {
-//       dispatch(console.error(error))
-//     }
-//   }
-// }
-
-// export const treehouseCartThunk = cartId => {
-//   return async dispatch => {
-//     try {
-//       console.log('inside treehouseCartThunk')
-//       const {data} = await axios.get(`/api/cart`)
-//       dispatch(viewTreehouseCart(data))
-//     } catch (error) {
-//       dispatch(console.error(error))
-//     }
-//   }
-// }
-
+// There's actually no reason for this function to be a thunk,
+// as it's not modifying the store.
+export const saveUserCartThunk = (userId, cart) => async dispatch => {
+  try {
+    await axios.put(`/api/users/${userId}/activeCart`, cart)
+  } catch (error) {
+    dispatch(console.error(error))
+  }
+}
 /**
  * REDUCER
  */
-export default function(cart = {}, action) {
+// eslint-disable-next-line complexity
+export default function(cart = [], action) {
   switch (action.type) {
     case ADD_TO_CART:
       if (cart.length !== 0) {
@@ -117,13 +74,13 @@ export default function(cart = {}, action) {
         }
       }
       return [...cart, {treehouse: action.treehouse, quantity: 1}]
-    case LOAD_USER_CART:
-      return action.cart
     case CREATE_NEW_CART:
-      return [] //save old cart in the future
+      return []
     case GET_USER:
       return action.cart
     case CHECKOUT:
+      return []
+    case REMOVE_USER:
       return []
     default:
       return cart

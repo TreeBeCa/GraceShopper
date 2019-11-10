@@ -4,7 +4,7 @@ import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import {Login, Signup, UserHome, AllProducts, UserCart} from './components'
-import {me, createNewCart, getUserCartThunk} from './store'
+import {me, createNewCart, saveUserCartThunk} from './store'
 
 /**
  * COMPONENT
@@ -12,10 +12,16 @@ import {me, createNewCart, getUserCartThunk} from './store'
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
-    //this.props.getNewCart()
+  }
+
+  componentWillUnmount() {
+    if (this.props.isLoggedIn) {
+      this.props.saveUserCartThunk(this.props.user.id, this.props.cart)
+    }
   }
 
   render() {
+    console.log('routes props', this.props)
     const {isLoggedIn} = this.props
 
     return (
@@ -34,8 +40,6 @@ class Routes extends Component {
             <Route exact path="/home" component={UserHome} />
           </Switch>
         )}
-        {/* Displays our Login component as a fallback */}
-        {/* <Route component={Login} /> */}
       </Switch>
     )
   }
@@ -49,7 +53,8 @@ const mapState = state => {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
     isLoggedIn: !!state.user.id,
-    user: state.user
+    user: state.user,
+    cart: state.cart
   }
 }
 
@@ -58,12 +63,10 @@ const mapDispatch = dispatch => {
     loadInitialData() {
       dispatch(me())
     },
-    getNewCart: () => dispatch(createNewCart())
+    getNewCart: () => dispatch(createNewCart()),
+    saveUserCartThunk: (id, cart) => dispatch(saveUserCartThunk(id, cart))
   }
 }
-
-// (dispatch, props) => {
-//   const userId = props.match.params.userId
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes

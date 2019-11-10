@@ -1,12 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {checkout} from '../store'
+import {checkout, saveUserCartThunk} from '../store'
 
 class UserCart extends Component {
   render() {
-    console.log('props in userCart', this.props)
     const cart = this.props.cart
-    console.log('cart-> ', cart)
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
@@ -16,7 +14,6 @@ class UserCart extends Component {
         cartPriceTotal += total
       })
     }
-    console.log('carPriceTotal->', cartPriceTotal)
     if (cart.length) {
       return (
         <div>
@@ -30,25 +27,36 @@ class UserCart extends Component {
               {cart.map(elem => (
                 <tr key={elem.treehouse.id}>
                   <td>{elem.treehouse.name}</td>
-                  <td>{elem.treehouse.price}</td>
+                  <td>{elem.treehouse.price / 100}</td>
                   <td>{elem.quantity}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          <div>Total Price:{cartPriceTotal}</div>
+          <div>Total Price:{cartPriceTotal / 100}</div>
 
           {this.props.isLoggedIn ? (
-            <button
-              type="button"
-              onClick={() => {
-                this.props.checkout()
-                this.props.history.push('/checkedOut')
-              }}
-            >
-              check out
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  this.props.checkout()
+                  this.props.history.push('/checkedOut')
+                }}
+              >
+                check out
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  this.props.saveUserCart(this.props.user.id, cart)
+                }
+              >
+                save cart
+              </button>
+            </>
           ) : (
             <h3>please log in or create an account to check out</h3>
           )}
@@ -70,9 +78,8 @@ const mapStateToProps = state => {
 
 const mapDispatch = dispatch => {
   return {
-    checkout: () => {
-      dispatch(checkout())
-    }
+    checkout: () => dispatch(checkout()),
+    saveUserCart: (id, cart) => dispatch(saveUserCartThunk(id, cart))
   }
 }
 
