@@ -1,9 +1,16 @@
 import React, {Component} from 'react'
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {checkout} from '../store'
+import {checkout, removeTreeHouse} from '../store'
 
 class UserCart extends Component {
+  deleteButtton(houseId) {
+    try {
+      this.props.removeTreeHouse(houseId)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   render() {
     console.log('props in userCart', this.props)
     const cart = this.props.cart
@@ -34,6 +41,16 @@ class UserCart extends Component {
                   <td>{elem.treeHouse.name}</td>
                   <td>{elem.treeHouse.price}</td>
                   <td>{elem.quantity}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        this.deleteButtton(elem.treeHouse.id)
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -73,6 +90,9 @@ const mapStateToProps = state => {
 
 const mapDispatch = dispatch => {
   return {
+    removeTreeHouse: id => {
+      dispatch(removeTreeHouse(id))
+    },
     checkout: () => {
       dispatch(checkout())
     }

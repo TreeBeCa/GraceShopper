@@ -6,10 +6,10 @@ import history from '../history'
  */
 const GET_PRODUCT = 'GET_PRODUCT'
 const ADD_TO_CART = 'ADD_TO_CART'
-const EDIT_CART = 'EDIT_CART'
 const VIEW_TREEHOUSECART = 'VIEW_TREEHOUSECART'
 const CREATE_NEW_CART = 'CREATE_NEW_CART'
 const CHECKOUT = 'CHECKOUT'
+const REMOVE_TREEHOUSE = 'REMOVE_TREEHOUSE'
 
 /**
  * INITIAL STATE
@@ -29,11 +29,6 @@ export const addToCart = treeHouse => ({
   treeHouse
 })
 
-export const editCart = houseId => ({
-  type: EDIT_CART,
-  houseId
-})
-
 export const viewTreehouseCart = cartId => ({
   type: VIEW_TREEHOUSECART,
   cartId
@@ -46,6 +41,12 @@ export const createNewCart = () => ({
 export const checkout = () => ({
   type: CHECKOUT
 })
+
+export const removeTreeHouse = houseId => ({
+  type: REMOVE_TREEHOUSE,
+  houseId
+})
+
 /**
  * THUNK CREATORS
  */
@@ -75,7 +76,7 @@ export const editingCart = id => {
   return async dispatch => {
     try {
       const {data} = await axios.delete(`/api/cart-view/${id}`)
-      dispatch(editCart(data))
+      dispatch(removeTreeHouse(data))
     } catch (error) {
       dispatch(console.error(error))
     }
@@ -115,8 +116,15 @@ export default function(cart = [], action) {
         }
       }
       return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
-    // case EDIT_CART:
-    //   return state.filter(houses => houses.id !== action.houseId)
+    case REMOVE_TREEHOUSE:
+      // eslint-disable-next-line no-case-declarations
+      const newState = Object.assign([], cart)
+      // eslint-disable-next-line no-case-declarations
+      const indexOfHouse = cart.findIndex(element => {
+        return element.id === action.houseId
+      })
+      newState.splice(indexOfHouse, 1)
+      return newState
     case VIEW_TREEHOUSECART: {
       return action.cartId
     }
