@@ -6,26 +6,14 @@ import {getUserThunk} from '../store'
 /**
  * COMPONENT
  */
-class UserProfilePage extends Component {
-  componentDidMount() {
-    this.props.getUserThunk()
-  }
-
+export const UserProfilePage = props => {
   // const {} = props
-  render() {
-    console.log('props: ', this.props)
-    return (
-      <div>
-        <h3>Welcome to Profile Page</h3>
-        Username: {this.props.username}
-        <br />
-        Email: {this.props.email}
-        <br />
-        Profile Pic: {this.props.profileImgUrl}{' '}
-        <img src={this.props.profileImgUrl} />
-      </div>
-    )
-  }
+
+  return (
+    <div>
+      <h3>Welcome to Profile Page</h3>
+    </div>
+  )
 }
 /**
  * CONTAINER
