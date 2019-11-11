@@ -3,9 +3,9 @@ import {connect} from 'react-redux'
 import {checkout, removeTreeHouse} from '../store'
 
 class UserCart extends Component {
-  deleteButtton(houseId) {
+  deleteButtton(id) {
     try {
-      this.props.removeTreeHouse(houseId)
+      this.props.removeTreeHouse(id)
     } catch (error) {
       console.error(error)
     }
@@ -33,6 +33,7 @@ class UserCart extends Component {
           <table className="checkout">
             <tbody>
               {cart.map(elem => (
+
                 <tr key={elem.treehouse.id}>
                   <td>{elem.treehouse.name}</td>
                   <td>{elem.treehouse.price / 100}</td>
@@ -52,7 +53,7 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-          <div>Total Price:{cartPriceTotal / 100}</div>
+          <div>Total Price: ${cartPriceTotal / 100}</div>
 
           {this.props.isLoggedIn ? (
             <button
