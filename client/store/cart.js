@@ -105,8 +105,8 @@ export default function(cart = [], action) {
       // eslint-disable-next-line no-case-declarations
       const newState = Object.assign([], cart)
       // eslint-disable-next-line no-case-declarations
-      const indexOfHouse = cart.findIndex(element => {
-        return element.id === action.houseId
+      let indexOfHouse = cart.findIndex(element => {
+        return element.treeHouse.id === action.houseId
       })
       newState.splice(indexOfHouse, 1)
       return newState
