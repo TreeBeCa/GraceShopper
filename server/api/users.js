@@ -132,4 +132,31 @@ router.get('/:userId/carts', async (req, res, next) => {
   }
 })
 
-// '/guest/cart'
+router.put('/:userId/checkout', async (req, res, next) => {
+  try {
+    // find user's current 'active cart'
+    const user = await User.findByPk(req.params.userId, {
+      include: [{model: Cart}]
+    })
+    const activeCart = user.carts.find(cart => cart.active === true)
+
+    //total up the price
+    let total = 0
+    activeCart.treehouses.forEach(treehouse => {
+      total += treehouse.TreehouseCart.quantity * treehouse.price
+    })
+    activeCart.total = total
+
+    // set the order date
+    const now = new Date()
+    activeCart.orderDate = now.getDate()
+
+    // set active to false
+    activeCart.active = false
+
+    activeCart.save()
+    res.sendStatus(200)
+  } catch (error) {
+    next(error)
+  }
+})

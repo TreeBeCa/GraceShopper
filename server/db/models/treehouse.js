@@ -16,6 +16,9 @@ const Treehouse = db.define('treehouse', {
     type: Sequelize.INTEGER,
     validate: {
       min: 0
+    },
+    get() {
+      return this.getDataValue('price') / 100
     }
   },
   imageUrl: {
