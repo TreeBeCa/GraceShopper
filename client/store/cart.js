@@ -73,7 +73,7 @@ export const addToCartThunk = (treehouse, userId) => async dispatch => {
 
 export const removeOneThunk = (treehouse, userId) => async dispatch => {
   if (userId) {
-    await axios.put(`api/users/${userId}/activeCart/delete/${treehouse.id}`)
+    await axios.put(`api/users/${userId}/activeCart/remove/${treehouse.id}`)
     dispatch(removeOne(treehouse))
   } else {
     dispatch(removeOne(treehouse))
