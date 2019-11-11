@@ -10,9 +10,9 @@ const isAdminMiddleware = (req, res, next) => {
 }
 
 const isUserMiddleware = (req, res, next) => {
-  // console.log('inside middleware', req.params.userId)
-  // console.log('inside middleware', req.user.id)
   if (req.user) {
+    console.log('inside middleware', req.params.userId)
+    console.log('inside middleware', req.user.id)
     const currUserId = req.user.id
     if (currUserId === req.params.userId) {
       next()
