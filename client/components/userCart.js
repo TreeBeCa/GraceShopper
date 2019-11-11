@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {checkout, removeTreeHouse, saveUserCartThunk} from '../store'
+import {checkout, removeTreeHouse} from '../store'
 
 class UserCart extends Component {
   deleteButtton(houseId) {
@@ -55,26 +55,15 @@ class UserCart extends Component {
           <div>Total Price:{cartPriceTotal / 100}</div>
 
           {this.props.isLoggedIn ? (
-            <>
-              <button
-                type="button"
-                onClick={() => {
-                  this.props.checkout()
-                  this.props.history.push('/checkedOut')
-                }}
-              >
-                check out
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  this.props.saveUserCart(this.props.user.id, cart)
-                }
-              >
-                save cart
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={() => {
+                this.props.checkout()
+                this.props.history.push('/checkedOut')
+              }}
+            >
+              check out
+            </button>
           ) : (
             <h3>please log in or create an account to check out</h3>
           )}
@@ -97,7 +86,6 @@ const mapStateToProps = state => {
 const mapDispatch = dispatch => {
   return {
     checkout: () => dispatch(checkout()),
-    saveUserCart: (id, cart) => dispatch(saveUserCartThunk(id, cart)),
     removeTreeHouse: id => {
       dispatch(removeTreeHouse(id))
     }

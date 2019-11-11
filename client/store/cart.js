@@ -57,6 +57,7 @@ export const checkoutThunk = (userId, cart) => async dispatch => {
 export const addToCartThunk = (treehouse, userId) => async dispatch => {
   if (userId) {
     // perform an axios request to increment the threehouse in the logged-in user's cart,
+    await axios.put(`api/users/${userId}/activeCart/add/${treehouse.id}`)
     //and then
     dispatch(addToCart(treehouse))
   } else {
