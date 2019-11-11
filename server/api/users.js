@@ -68,7 +68,6 @@ router.get('/:userId/activeCart', async (req, res, next) => {
 router.put(
   '/:userId/activeCart/:operation/:houseId',
   async (req, res, next) => {
-    const newCartData = req.body
     try {
       // find user's current 'active cart', if any
       const user = await User.findByPk(req.params.userId, {
