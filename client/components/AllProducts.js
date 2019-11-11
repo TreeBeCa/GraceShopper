@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {thunkGetAllHouses, addToCart} from '../store'
+import {thunkGetAllHouses, addToCartThunk} from '../store'
 
 class AllProducts extends Component {
   componentDidMount() {
@@ -16,7 +16,14 @@ class AllProducts extends Component {
             <br />
             <img src={house.imageUrl} />
             <br />
-            <button type="button" onClick={() => this.props.addToCart(house)}>
+            <button
+              type="button"
+              onClick={
+                this.props.isLoggedIn
+                  ? () => this.props.addToCart(house, this.props.user.id)
+                  : () => this.props.addToCart(house)
+              }
+            >
               Add To Cart
             </button>
           </div>
@@ -29,14 +36,16 @@ class AllProducts extends Component {
 const mapStateToProps = state => {
   return {
     treeHouses: state.treeHouses,
-    cart: state.cart
+    cart: state.cart,
+    isLoggedIn: !!state.user.id,
+    user: state.user
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     getTreeHouses: () => dispatch(thunkGetAllHouses()),
-    addToCart: house => dispatch(addToCart(house))
+    addToCart: (house, userId) => dispatch(addToCartThunk(house, userId))
   }
 }
 
