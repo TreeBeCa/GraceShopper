@@ -6,7 +6,10 @@ import history from '../history'
  */
 const GET_PRODUCT = 'GET_PRODUCT'
 const ADD_TO_CART = 'ADD_TO_CART'
-const EDIT_CART = 'EDIT_CART'
+const VIEW_TREEHOUSECART = 'VIEW_TREEHOUSECART'
+const CREATE_NEW_CART = 'CREATE_NEW_CART'
+const CHECKOUT = 'CHECKOUT'
+const REMOVE_TREEHOUSE = 'REMOVE_TREEHOUSE'
 
 /**
  * INITIAL STATE
@@ -26,8 +29,21 @@ export const addToCart = treeHouse => ({
   treeHouse
 })
 
-export const editCart = houseId => ({
-  type: EDIT_CART,
+export const viewTreehouseCart = cartId => ({
+  type: VIEW_TREEHOUSECART,
+  cartId
+})
+
+export const createNewCart = () => ({
+  type: CREATE_NEW_CART
+})
+
+export const checkout = () => ({
+  type: CHECKOUT
+})
+
+export const removeTreeHouse = houseId => ({
+  type: REMOVE_TREEHOUSE,
   houseId
 })
 
@@ -37,7 +53,7 @@ export const editCart = houseId => ({
 export const getSingleProduct = id => {
   return async dispatch => {
     try {
-      const {data} = await axios.get(`/api/products/${id}`)
+      const {data} = await axios.get(`/api/treehouses/${id}`)
       dispatch(getProduct(data))
     } catch (error) {
       dispatch(console.error(error))
@@ -60,7 +76,19 @@ export const editingCart = id => {
   return async dispatch => {
     try {
       const {data} = await axios.delete(`/api/cart-view/${id}`)
-      dispatch(editCart(data))
+      dispatch(removeTreeHouse(data))
+    } catch (error) {
+      dispatch(console.error(error))
+    }
+  }
+}
+
+export const treehouseCartThunk = cartId => {
+  return async dispatch => {
+    try {
+      console.log('inside treehouseCartThunk')
+      const {data} = await axios.get(`/api/cart`)
+      dispatch(viewTreehouseCart(data))
     } catch (error) {
       dispatch(console.error(error))
     }
@@ -70,15 +98,42 @@ export const editingCart = id => {
 /**
  * REDUCER
  */
-export default function(state = initialState, action) {
+export default function(cart = [], action) {
   switch (action.type) {
-    case GET_PRODUCT:
-      return action.treeHouse
     case ADD_TO_CART:
-      return [...state, action.treeHouse]
-    case EDIT_CART:
-      return state.filter(houses => houses.id !== action.houseId)
+      if (cart.length !== 0) {
+        const matchingTreeHouse = cart.find(
+          element => element.treeHouse.id === action.treeHouse.id
+        )
+        if (matchingTreeHouse) {
+          return cart.map(element => {
+            if (element.treeHouse.id === action.treeHouse.id) {
+              element.quantity++
+              return element
+            }
+            return element
+          })
+        }
+      }
+      return [...cart, {treeHouse: action.treeHouse, quantity: 1}]
+    case REMOVE_TREEHOUSE:
+      // eslint-disable-next-line no-case-declarations
+      const newState = Object.assign([], cart)
+      // eslint-disable-next-line no-case-declarations
+      let indexOfHouse = cart.findIndex(element => {
+        return element.treeHouse.id === action.houseId
+      })
+      newState.splice(indexOfHouse, 1)
+      return newState
+    case VIEW_TREEHOUSECART: {
+      return action.cartId
+    }
+    case CREATE_NEW_CART: {
+      return [] //save old cart in the future
+    }
+    case CHECKOUT:
+      return []
     default:
-      return state
+      return cart
   }
 }

@@ -1,7 +1,8 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const {User, Cart} = require('../db/models')
 module.exports = router
 
+//mounted on api/users
 router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
@@ -16,49 +17,28 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/:id/profile', async (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.params.id)
-    const limitedData = {email: user.email, id: user.id}
-    res.json(limitedData)
+    const singleUser = await User.findByPk(req.params.userId, {
+      include: [{model: Cart}]
+    })
+    console.log('singleUser', singleUser)
+    res.json(singleUser)
   } catch (err) {
     next(err)
   }
 })
 
-// router.put('/:id/profile', async (req, res, next) => {
-//   try {
-//     const userId = req.params.id
-//     const userCurData = req.body
-//     const updatedUser = await User.update(userCurData, {
-//       returning: true,
-//       where: {
-//         id: userId,
-//         email: userCurData.email
-//       }
-//     })
-//     // await updatedUser.save()
-//     res.send(updatedUser)
-//     // if (updatedUser) {
-//     //   console.log(updatedUser)
-//     //   res.status(200).json("update success!")
-//     // } else {
-//     //   res.status(404).send("ERROR!!")
-//     // }
-//   } catch (err) {
-//     next(err)
-//   }
-// })
-
-router.put('/:id/profile', async (req, res, next) => {
+router.get('/:userId/cart', async (req, res, next) => {
   try {
-    const newInfo = req.body
-    const user = await User.findByPk(req.params.id)
-    console.log(user)
-    user.email = newInfo.email
-    await user.save()
-    res.json(user)
+    const activeCart = await User.findByPk(req.params.userId, {
+      include: [{model: Cart, where: {active: true}}]
+    })
+    console.log('singleUser', activeCart)
+    res.json(activeCart)
   } catch (err) {
     next(err)
   }
 })
+
+// '/guest/cart'

@@ -1,40 +1,43 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
+// import React, {Component} from 'react'
+// import {connect} from 'react-redux'
+// import {getSingleProduct} from '../store/cart'
 
-class SingleProduct extends Component {
-  consturctor() {
-    super()
-  }
+// class SingleProduct extends Component {
+//   constructor() {
+//     super()
+//   }
 
-  render() {
-    return (
-      <div>
-        <h1>SINGLE HOUSE</h1>
-        <p>Check the tree house available!</p>
-        <h2>House's Name</h2>
-        <img>Image</img>
-        <p>Description</p>
-        <button type="submit">Add To Cart</button>
-      </div>
-    )
-  }
-}
+//   componentDidMount() {
+//     console.log('PROPS ->', this.props)
+//     this.props.viewSingleProduct(this.props.match.params.id)
+//   }
 
-const mapStateToProps = state => {
-  return {
-    products: state.treeHouse
-  }
-}
+//   render() {
+//     return (
+//       <div>
+//         <h1>SINGLE HOUSE</h1>
+//         <p>Check the tree house available!</p>
+//         <h2>{this.props.treehouses.name}</h2>
+//         <img src={this.props.treehouses.imageUrl} />
+//         <p>{this.props.treehouses.description}}</p>
+//         <button type="submit">Add To Cart</button>
+//       </div>
+//     )
+//   }
+// }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSingleProduct: id => {
-      dispatch(getSingleProduct(id))
-    }
-  }
-}
+// const mapStateToProps = state => {
+//   return {
+//     treehouses: state.treeHouse
+//   }
+// }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SingleProduct)
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     viewSingleProduct: id => {
+//       dispatch(getSingleProduct(id))
+//     }
+//   }
+// }
+
+// export default connect(mapStateToProps, mapDispatchToProps)(SingleProduct)
