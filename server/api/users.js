@@ -83,11 +83,9 @@ router.put('/:userId/activeCart', async (req, res, next) => {
 
     // remove all the old order treehouses
     // for some reason this doesn't seem to work :(
-    cart.treehouses.forEach(async treehouse => {
-      await cart.removeTreehouse(treehouse)
-    })
-    console.log('empty cart:', cart)
-    console.log('empty cart:', cart)
+    // cart.treehouses.forEach(async treehouse => {
+    //   await cart.removeTreehouse(treehouse)
+    // })
 
     // add in the new treehouses
     newCartData.forEach(async function(elem) {
