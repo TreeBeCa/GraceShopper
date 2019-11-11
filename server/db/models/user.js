@@ -7,6 +7,12 @@ const User = db.define('user', {
     type: Sequelize.STRING,
     defaultValue: 'anon'
   },
+  name: {
+    type: Sequelize.STRING
+  },
+  address: {
+    type: Sequelize.STRING
+  },
   profileImgUrl: {
     type: Sequelize.STRING,
     defaultValue:
