@@ -1,6 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {checkout, removeTreeHouse} from '../store'
+import {
+  checkout,
+  removeTreeHouse,
+  addToCartThunk,
+  removeOneThunk
+} from '../store'
 
 class UserCart extends Component {
   deleteButtton(id) {
@@ -33,11 +38,41 @@ class UserCart extends Component {
           <table className="checkout">
             <tbody>
               {cart.map(elem => (
-
                 <tr key={elem.treehouse.id}>
                   <td>{elem.treehouse.name}</td>
                   <td>{elem.treehouse.price / 100}</td>
                   <td>{elem.quantity}</td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={
+                        this.props.isLoggedIn
+                          ? () =>
+                              this.props.addToCart(
+                                elem.treehouse,
+                                this.props.user.id
+                              )
+                          : () => this.props.addToCart(elem.treehouse)
+                      }
+                    >
+                      +
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={
+                        this.props.isLoggedIn
+                          ? () =>
+                              this.props.removeOneFromCart(
+                                elem.treehouse,
+                                this.props.user.id
+                              )
+                          : () => this.props.removeOneFromCart(elem.treehouse)
+                      }
+                    >
+                      -
+                    </button>
+                  </td>
                   <td>
                     <button
                       type="button"
@@ -78,6 +113,7 @@ class UserCart extends Component {
 
 const mapStateToProps = state => {
   return {
+    treeHouses: state.treeHouses,
     user: state.user,
     cart: state.cart,
     isLoggedIn: !!state.user.id
@@ -89,7 +125,10 @@ const mapDispatch = dispatch => {
     checkout: () => dispatch(checkout()),
     removeTreeHouse: id => {
       dispatch(removeTreeHouse(id))
-    }
+    },
+    addToCart: (house, userId) => dispatch(addToCartThunk(house, userId)),
+    removeOneFromCart: (house, userId) =>
+      dispatch(removeOneThunk(house, userId))
   }
 }
 
