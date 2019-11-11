@@ -54,13 +54,13 @@ export const checkoutThunk = (userId, cart) => async dispatch => {
   }
 }
 
-// There's actually no reason for this function to be a thunk,
-// as it's not modifying the store.
-export const saveUserCartThunk = (userId, cart) => async dispatch => {
-  try {
-    await axios.put(`/api/users/${userId}/activeCart`, cart)
-  } catch (error) {
-    dispatch(console.error(error))
+export const addToCartThunk = (treehouse, userId) => async dispatch => {
+  if (userId) {
+    // perform an axios request to increment the threehouse in the logged-in user's cart,
+    //and then
+    dispatch(addToCart(treehouse))
+  } else {
+    dispatch(addToCart(treehouse))
   }
 }
 

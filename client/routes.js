@@ -11,7 +11,7 @@ import {
   UserCart,
   CheckedOut
 } from './components'
-import {me, createNewCart, saveUserCartThunk} from './store'
+import {me} from './store'
 
 /**
  * COMPONENT
@@ -19,12 +19,6 @@ import {me, createNewCart, saveUserCartThunk} from './store'
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData()
-  }
-
-  componentWillUnmount() {
-    if (this.props.isLoggedIn) {
-      this.props.saveUserCartThunk(this.props.user.id, this.props.cart)
-    }
   }
 
   render() {
@@ -72,9 +66,7 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me())
-    },
-    getNewCart: () => dispatch(createNewCart()),
-    saveUserCartThunk: (id, cart) => dispatch(saveUserCartThunk(id, cart))
+    }
   }
 }
 
