@@ -1,18 +1,31 @@
-import React from 'react'
+import React, {Component} from 'react'
 // import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+import {getUserThunk} from '../store'
 
 /**
  * COMPONENT
  */
-export const UserProfilePage = props => {
-  // const {} = props
+// export const UserProfilePage = props => {
+class UserProfilePage extends Component {
+  componentDidMount() {}
 
-  return (
-    <div>
-      <h3>Welcome to Profile Page</h3>
-    </div>
-  )
+  handleChange(event) {}
+
+  render() {
+    // const {} = props
+    console.log('props', this.props)
+    return (
+      <div>
+        <h3>Welcome to Profile Page</h3>
+        Username: {this.props.username}
+        <br />
+        Email: {this.props.email}
+        <br />
+        Profile Img: <img src={this.props.profileImgUrl} />
+      </div>
+    )
+  }
 }
 
 /**
@@ -24,7 +37,13 @@ const mapState = state => {
   }
 }
 
-export default connect(mapState)(UserProfilePage)
+const mapDispatch = dispatch => {
+  return {
+    me: () => dispatch(me())
+  }
+}
+
+export default connect(mapState, mapDispatch)(UserProfilePage)
 
 /**
  * PROP TYPES

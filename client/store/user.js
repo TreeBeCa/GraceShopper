@@ -70,6 +70,16 @@ export const getCartThunk = userId => {
     }
   }
 }
+export const getUserThunk = userId => {
+  return async dispatch => {
+    try {
+      const {data} = await axios.get(`/api/users/${userId}`)
+      dispatch(getUser(data))
+    } catch (err) {
+      console.error(err)
+    }
+  }
+}
 
 /**
  * REDUCER

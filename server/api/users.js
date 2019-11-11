@@ -41,4 +41,32 @@ router.get('/:userId/cart', async (req, res, next) => {
   }
 })
 
+router.get('/:userId/profile', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    const limited = {
+      email: user.email,
+      id: user.id,
+      username: user.username,
+      profileImgUrl: user.profileImgUrl
+    }
+    res.json(limited)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:userId/profile', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    user.email = req.body.email
+    user.username = req.body.username
+    user.profileImgUrl = req.body.profileImgUrl
+    await user.save()
+    res.json(user)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // '/guest/cart'
