@@ -1,9 +1,11 @@
 const router = require('express').Router()
 const {User, Cart} = require('../db/models')
+const isAdminMiddleware = require('../security')
+
 module.exports = router
 
 //mounted on api/users
-router.get('/', async (req, res, next) => {
+router.get('/', isAdminMiddleware, async (req, res, next) => {
   try {
     const users = await User.findAll({
       // explicitly select only the id and email fields - even though
@@ -17,7 +19,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/:userId', async (req, res, next) => {
+router.get('/:userId', isAdminMiddleware, async (req, res, next) => {
   try {
     const singleUser = await User.findByPk(req.params.userId, {
       include: [{model: Cart}]
@@ -29,7 +31,7 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-router.get('/:userId/cart', async (req, res, next) => {
+router.get('/:userId/cart', isAdminMiddleware, async (req, res, next) => {
   try {
     const activeCart = await User.findByPk(req.params.userId, {
       include: [{model: Cart, where: {active: true}}]
