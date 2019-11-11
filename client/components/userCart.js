@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {checkout, removeTreeHouse} from '../store'
 
@@ -12,9 +11,7 @@ class UserCart extends Component {
     }
   }
   render() {
-    // console.log('props in userCart', this.props)
     const cart = this.props.cart
-    // console.log('cart-> ', cart)
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
@@ -24,9 +21,7 @@ class UserCart extends Component {
         cartPriceTotal += total
       })
     }
-    // console.log('carPriceTotal->', cartPriceTotal)
     if (cart.length) {
-      // console.log('cart-> ', cart)
       return (
         <div>
           {this.props.isLoggedIn ? (
@@ -39,7 +34,7 @@ class UserCart extends Component {
               {cart.map(elem => (
                 <tr key={elem.treeHouse.id}>
                   <td>{elem.treeHouse.name}</td>
-                  <td>{elem.treeHouse.price}</td>
+                  <td>${elem.treeHouse.price / 100}</td>
                   <td>{elem.quantity}</td>
                   <td>
                     <button
@@ -56,7 +51,7 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-          <div>Total Price:{cartPriceTotal}</div>
+          <div>Total Price: ${cartPriceTotal / 100}</div>
 
           {this.props.isLoggedIn ? (
             <button

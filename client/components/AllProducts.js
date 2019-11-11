@@ -12,7 +12,7 @@ class AllProducts extends Component {
       <div className="TreeHouseContainer">
         {treeHouses.map(house => (
           <div className="SingleTreeHouse" key={house.id}>
-            <h2>{house.name}</h2> ${house.price}
+            <h2>{house.name}</h2> ${house.price / 100}
             <br />
             <img src={house.imageUrl} />
             <br />
