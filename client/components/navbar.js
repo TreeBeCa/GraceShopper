@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {logout, saveUserCartThunk} from '../store'
+import {logout} from '../store'
 
 const Navbar = props => {
   const {handleClick, isLoggedIn} = props
@@ -48,9 +48,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    handleClick(props) {
+    handleClick() {
       dispatch(logout())
-      dispatch(saveUserCartThunk(props.user.id, props.cart))
     }
   }
 }
