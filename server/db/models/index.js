@@ -1,6 +1,7 @@
 const User = require('./user')
 const Treehouse = require('./treehouse')
 const Cart = require('./cart')
+const TreehouseCart = require('./treehouseCart')
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -12,8 +13,8 @@ const Cart = require('./cart')
 Cart.belongsTo(User)
 User.hasMany(Cart)
 
-Treehouse.belongsToMany(Cart, {through: 'TreehouseCart'})
-Cart.belongsToMany(Treehouse, {through: 'TreehouseCart'})
+Treehouse.belongsToMany(Cart, {through: TreehouseCart})
+Cart.belongsToMany(Treehouse, {through: TreehouseCart})
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,

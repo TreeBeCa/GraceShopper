@@ -6,7 +6,6 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
-const GET_CART = 'GET_CART'
 
 /**
  * INITIAL STATE
@@ -16,20 +15,30 @@ const defaultUser = {}
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({type: GET_USER, user})
+const getUser = (user, cart) => ({type: GET_USER, user, cart})
 const removeUser = () => ({type: REMOVE_USER})
-export const getCart = userId => ({
-  type: GET_CART,
-  userId
-})
 
 /**
  * THUNK CREATORS
  */
 export const me = () => async dispatch => {
   try {
+    //get data of logged in user
     const res = await axios.get('/auth/me')
-    dispatch(getUser(res.data || defaultUser))
+
+    let user = defaultUser
+    let cart = []
+    //if there is a logged in user, also get their cart
+    if (res.data) {
+      user = res.data
+      const cartRes = await axios.get(`/api/users/${user.id}/activeCart`)
+      console.log(cartRes.data)
+      if (cartRes.data) {
+        cart = cartRes.data
+      }
+    }
+    //dispatch getUser with the user and their cart
+    dispatch(getUser(user, cart))
   } catch (err) {
     console.error(err)
   }
@@ -44,7 +53,13 @@ export const auth = (email, password, method) => async dispatch => {
   }
 
   try {
-    dispatch(getUser(res.data))
+    let cart = []
+    const user = res.data
+    const cartRes = await axios.get(`/api/users/${user.id}/activeCart`)
+    if (cartRes.data) {
+      cart = cartRes.data
+    }
+    dispatch(getUser(user, cart))
     history.push('/home')
   } catch (dispatchOrHistoryErr) {
     console.error(dispatchOrHistoryErr)
@@ -60,16 +75,6 @@ export const logout = () => async dispatch => {
     console.error(err)
   }
 }
-export const getCartThunk = userId => {
-  return async dispatch => {
-    try {
-      const {data} = await axios.get(`/api/users/${userId}/cart`)
-      dispatch(getCart(data))
-    } catch (error) {
-      dispatch(console.error(error))
-    }
-  }
-}
 
 /**
  * REDUCER
@@ -80,9 +85,6 @@ export default function(state = defaultUser, action) {
       return action.user
     case REMOVE_USER:
       return defaultUser
-    case GET_CART: {
-      return action.userId
-    }
     default:
       return state
   }

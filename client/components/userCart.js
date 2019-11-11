@@ -10,14 +10,15 @@ class UserCart extends Component {
       console.error(error)
     }
   }
+
   render() {
     const cart = this.props.cart
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
-        let treeHousePrice = element.treeHouse.price
+        let treehousePrice = element.treehouse.price
         let quantity = element.quantity
-        let total = treeHousePrice * quantity
+        let total = treehousePrice * quantity
         cartPriceTotal += total
       })
     }
@@ -32,15 +33,16 @@ class UserCart extends Component {
           <table className="checkout">
             <tbody>
               {cart.map(elem => (
-                <tr key={elem.treeHouse.id}>
-                  <td>{elem.treeHouse.name}</td>
-                  <td>${elem.treeHouse.price / 100}</td>
+
+                <tr key={elem.treehouse.id}>
+                  <td>{elem.treehouse.name}</td>
+                  <td>{elem.treehouse.price / 100}</td>
                   <td>{elem.quantity}</td>
                   <td>
                     <button
                       type="button"
                       onClick={() => {
-                        this.deleteButtton(elem.treeHouse.id)
+                        this.deleteButtton(elem.treehouse.id)
                       }}
                     >
                       Delete
@@ -84,11 +86,9 @@ const mapStateToProps = state => {
 
 const mapDispatch = dispatch => {
   return {
+    checkout: () => dispatch(checkout()),
     removeTreeHouse: id => {
       dispatch(removeTreeHouse(id))
-    },
-    checkout: () => {
-      dispatch(checkout())
     }
   }
 }
