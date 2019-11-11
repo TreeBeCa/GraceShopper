@@ -58,7 +58,6 @@ class UserCart extends Component {
               type="button"
               onClick={() => {
                 this.props.checkout()
-                console.log('still here')
                 this.props.history.push('/checkedOut')
               }}
             >
