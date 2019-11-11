@@ -3,15 +3,6 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
-  username: {
-    type: Sequelize.STRING,
-    defaultValue: 'anon'
-  },
-  profileImgUrl: {
-    type: Sequelize.STRING,
-    defaultValue:
-      'https://www.pngkey.com/png/detail/115-1150152_default-profile-picture-avatar-png-green.png'
-  },
   email: {
     type: Sequelize.STRING,
     unique: true,

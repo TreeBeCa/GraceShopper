@@ -9,8 +9,7 @@ import {
   UserHome,
   AllProducts,
   UserCart,
-  CheckedOut,
-  UserProfilePage
+  CheckedOut
 } from './components'
 import {me, createNewCart} from './store'
 
