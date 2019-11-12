@@ -54,6 +54,36 @@ router.get('/:userId/activeCart', async (req, res, next) => {
   }
 })
 
+router.get('/:userId/profile', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    const limited = {
+      email: user.email,
+      id: user.id,
+      username: user.username,
+      profileImgUrl: user.profileImgUrl
+    }
+    res.json(limited)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:userId/profile', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    user.name = req.body.name
+    user.email = req.body.email
+    user.username = req.body.username
+    user.profileImgUrl = req.body.profileImgUrl
+    user.address = req.body.address
+    await user.save()
+    res.json(user)
+  } catch (err) {
+    next(err)
+  }
+})
+
 // the idea here is :operation can be "add" or "subtract"
 router.put(
   '/:userId/activeCart/:operation/:houseId',
