@@ -77,8 +77,9 @@ export const getCartThunk = userId => {
 }
 export const editUserThunk = user => async dispatch => {
   try {
-    console.log('editUserTHUNK')
-    const res = await axios.put(`/api/users/${user.id}/profile`, user.body)
+    const res = await axios.put(`/api/users/${user.id}/profile`, user)
+    console.log('thunk data:', user)
+    console.log('thunk res', res)
     dispatch(editUser(res))
   } catch (err) {
     console.error(err)
@@ -89,6 +90,7 @@ export const editUserThunk = user => async dispatch => {
  * REDUCER
  */
 export default function(state = defaultUser, action) {
+  // console.log("STATE: ", state)
   switch (action.type) {
     case GET_USER:
       return action.user
@@ -98,12 +100,14 @@ export default function(state = defaultUser, action) {
       return action.userId
     }
     case EDIT_USER: {
-      return {
-        ...state,
-        name: action.name,
-        email: action.email,
-        username: action.username,
-        address: action.address
+      if (state.id === action.user.id) {
+        return {
+          ...state,
+          name: action.name,
+          email: action.email,
+          username: action.username,
+          address: action.address
+        }
       }
     }
     default:

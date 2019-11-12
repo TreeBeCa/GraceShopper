@@ -21,7 +21,7 @@ class UserProfilePage extends React.Component {
     }
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
-    // this.props.editUserThunk = this.props.editUserThunk.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleChange(event) {
@@ -30,9 +30,18 @@ class UserProfilePage extends React.Component {
     })
   }
   handleSubmit(event) {
+    const {user} = this.props
     event.preventDefault()
-    console.log('this', this)
-    editUserThunk(this.state)
+
+    const updatedUser = {
+      username: this.state.username || user.username,
+      name: this.state.name || user.name,
+      address: this.state.address || user.address,
+      email: this.state.email || user.email,
+      id: user.id //<-- needs id to be pass from props into thunk
+    }
+    console.log('handlesubmit: ', updatedUser)
+    this.props.editUserThunk(updatedUser)
     this.setState({
       username: '',
       name: '',
@@ -43,8 +52,6 @@ class UserProfilePage extends React.Component {
 
   render() {
     const {user} = this.props
-    console.log('props', this.props)
-    console.log('this', this)
     return (
       <div>
         <h3>Welcome, {user.username}</h3>
@@ -63,6 +70,7 @@ class UserProfilePage extends React.Component {
             <EditUserForm
               handleChange={this.handleChange}
               handleSubmit={this.handleSubmit}
+              user={this.state}
             />
           )}
         />
