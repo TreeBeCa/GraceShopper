@@ -11,6 +11,7 @@ const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const REMOVE_TREEHOUSE = 'REMOVE_TREEHOUSE'
 const REMOVE_ONE = 'REMOVE_ONE'
+const DELETE_ALL = 'DELETE_ALL'
 
 /**
  * INITIAL STATE
@@ -42,6 +43,11 @@ export const checkout = () => ({
 export const removeTreeHouse = houseId => ({
   type: REMOVE_TREEHOUSE,
   houseId
+})
+
+export const deleteAllFromCart = treehouse => ({
+  type: DELETE_ALL,
+  treehouse
 })
 
 /**
@@ -77,6 +83,15 @@ export const removeOneThunk = (treehouse, userId) => async dispatch => {
     dispatch(removeOne(treehouse))
   } else {
     dispatch(removeOne(treehouse))
+  }
+}
+
+export const deleteAllThunk = (treehouse, userId) => async dispatch => {
+  if (userId) {
+    await axios.delete(`api/users/${userId}/activeCart/delete/${treehouse.id}`)
+    dispatch(deleteAllFromCart(treehouse))
+  } else {
+    dispatch(deleteAllFromCart(treehouse))
   }
 }
 
@@ -123,7 +138,7 @@ export default function(cart = [], action) {
           const treehousesInCart = cart.map(element => {
             if (element.treehouse.id === action.treehouse.id) {
               element.quantity--
-              console.log('element inside reducer', element)
+              // console.log('element inside reducer', element)
               return element
             }
             return element
@@ -134,18 +149,21 @@ export default function(cart = [], action) {
         }
       }
     }
+
     case CREATE_NEW_CART:
       return []
     case GET_USER:
       return action.cart
-    case REMOVE_TREEHOUSE:
+    case DELETE_ALL:
+      console.log('inside delete all reducer')
       // eslint-disable-next-line no-case-declarations
       const newState = Object.assign([], cart)
       // eslint-disable-next-line no-case-declarations
       let indexOfHouse = cart.findIndex(element => {
-        return element.treehouse.id === action.houseId
+        return element.treehouse.id === action.treehouse.id
       })
       newState.splice(indexOfHouse, 1)
+
       return newState
     case CHECKOUT:
       return []
