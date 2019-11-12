@@ -58,7 +58,7 @@ class UserProfilePage extends React.Component {
     return (
       <div>
         <h2>Welcome, {user.username}</h2>
-        <h3>Welcome, {user.email}</h3>
+        {/* <h3>Welcome, {user.email}</h3> */}
         Name: {user.name} <br />
         <p>Email: {user.email}</p>
         <br />
