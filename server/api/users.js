@@ -180,8 +180,11 @@ router.put('/:userId/checkout', async (req, res, next) => {
     const treehouses = await activeCart.getTreehouses()
 
     treehouses.forEach(treehouse => {
-      total += treehouse.TreehouseCart.quantity * treehouse.price * 100
+      // console.log('treehouse.price', treehouse.price * 100)
+      let formatPrice = treehouse.price * 100
+      total += treehouse.TreehouseCart.quantity * formatPrice
     })
+    console.log('checkout', total)
     activeCart.total = total
 
     // set the order date
