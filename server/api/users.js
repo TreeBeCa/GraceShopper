@@ -70,9 +70,10 @@ router.get('/:userId/activeCart', isUserMiddleware, async (req, res, next) => {
 router.put(
   '/:userId/activeCart/:operation/:houseId',
   async (req, res, next) => {
+    const {userId, operation, houseId} = req.params
     try {
       // find user's current 'active cart', if any
-      const user = await User.findByPk(req.params.userId, {
+      const user = await User.findByPk(userId, {
         include: [{model: Cart}]
       })
       const activeCart = user.carts.find(cart => cart.active === true)
@@ -85,23 +86,31 @@ router.put(
         })
       } else {
         cart = await Cart.create({active: true})
-        await cart.setUser(user)
+        cart.setUser(user)
       }
-
       //find the treehouse
-      const house = await Treehouse.findByPk(req.params.houseId)
-
-      console.log('treehouse id:', house.id)
-
+      const house = await Treehouse.findByPk(houseId)
       // is this treehouse already in our cart?
-      if (cart.treehouses.find(elem => elem.id === house.id) >= 0) {
-        console.log('house found in cart:', cart.treehouses)
-      } else {
-        //if not, add it
+      const found = cart.treehouses.find(elem => elem.id === house.id)
+      if (found) {
+        // if it is, adjust the quantity
+        if (operation === 'add') {
+          console.log('incrementing quantity')
+          found.TreehouseCart.quantity++
+          console.log(found.TreehouseCart.quantity)
+        } else if (operation === 'remove') {
+          found.TreehouseCart.quantity--
+          if (found.TreehouseCart.quantity < 1) {
+            await cart.removeTreehouse(house)
+          }
+        }
+        found.TreehouseCart.save()
+      } else if (operation === 'add') {
+        // if not, and we want to add, add
+        // decrimenting an item not in the cart does nothing
         console.log('house not found, adding it now')
         await cart.addTreehouse(house.id, {through: {quantity: 1}})
       }
-
       res.sendStatus(200)
     } catch (error) {
       next(error)
@@ -109,48 +118,28 @@ router.put(
   }
 )
 
-// router.put('/:userId/activeCart', async (req, res, next) => {
-//   const newCartData = req.body
-//   try {
-//     // find user's current 'active cart', if any
-//     const user = await User.findByPk(req.params.userId, {
-//       include: [{model: Cart}]
-//     })
-//     const activeCart = user.carts.find(cart => cart.active === true)
-
-//     let cart
-//     if (activeCart) {
-//       const activeCartId = user.carts[0].id
-//       cart = await Cart.findByPk(activeCartId, {
-//         include: [{model: Treehouse}]
-//       })
-//     } else {
-//       cart = await Cart.create({active: true})
-//       await cart.setUser(user)
-//     }
-
-//     // remove all the old order treehouses
-//     // for some reason this doesn't seem to work :(
-//     // cart.treehouses.forEach(async treehouse => {
-//     //   await cart.removeTreehouse(treehouse)
-//     // })
-
-//     // add in the new treehouses
-//     newCartData.forEach(async function(elem) {
-//       try {
-//         await cart.addTreehouse(elem.treehouse.id, {
-//           through: {quantity: elem.quantity}
-//         })
-//       } catch (error) {
-//         next(error)
-//       }
-//     })
-
-//     res.sendStatus(200)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+router.delete('/:userId/activeCart/delete/:houseId', async (req, res, next) => {
+  try {
+    const {userId, houseId} = req.params
+    const user = await User.findByPk(userId, {
+      include: [{model: Cart}]
+    })
+    const activeCart = user.carts.find(cart => cart.active === true)
+    let cart
+    if (activeCart) {
+      const activeCartId = user.carts[0].id
+      cart = await Cart.findByPk(activeCartId, {
+        include: [{model: Treehouse}]
+      })
+    }
+    //query the house to delete
+    const house = await Treehouse.findByPk(houseId)
+    await cart.removeTreehouse(house)
+    res.sendStatus(200)
+  } catch (error) {
+    next(error)
+  }
+})
 
 //this is broken for some reason
 router.get('/:userId/carts', async (req, res, next) => {
@@ -164,9 +153,6 @@ router.get('/:userId/carts', async (req, res, next) => {
         include: [{model: Treehouse}]
       })
     )
-
-    // let treehousesInCart;
-    // carts.forEach(cart => treehousesInCart.push(await Cart.findByPk(cart.id)))
 
     res.json(treehousesInCarts)
   } catch (err) {
