@@ -1,23 +1,30 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {checkout, removeTreeHouse} from '../store'
+import {
+  checkoutThunk,
+  // removeTreeHouse,
+  addToCartThunk,
+  removeOneThunk,
+  deleteAllThunk
+} from '../store'
 
 class UserCart extends Component {
-  deleteButtton(id) {
-    try {
-      this.props.removeTreeHouse(id)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // deleteButtton(id) {
+  //   try {
+  //     this.props.removeTreeHouse(id)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
   render() {
-    const cart = this.props.cart
+    const {cart, user} = this.props
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
-        let treeHousePrice = element.treeHouse.price
+        let treehousePrice = element.treehouse.price
         let quantity = element.quantity
-        let total = treeHousePrice * quantity
+        let total = treehousePrice * quantity
         cartPriceTotal += total
       })
     }
@@ -32,16 +39,53 @@ class UserCart extends Component {
           <table className="checkout">
             <tbody>
               {cart.map(elem => (
-                <tr key={elem.treeHouse.id}>
-                  <td>{elem.treeHouse.name}</td>
-                  <td>${elem.treeHouse.price / 100}</td>
+                <tr key={elem.treehouse.id}>
+                  <td>{elem.treehouse.name}</td>
+                  <td>${elem.treehouse.price}</td>
                   <td>{elem.quantity}</td>
                   <td>
                     <button
                       type="button"
-                      onClick={() => {
-                        this.deleteButtton(elem.treeHouse.id)
-                      }}
+                      onClick={
+                        this.props.isLoggedIn
+                          ? () =>
+                              this.props.addToCart(
+                                elem.treehouse,
+                                this.props.user.id
+                              )
+                          : () => this.props.addToCart(elem.treehouse)
+                      }
+                    >
+                      +
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={
+                        this.props.isLoggedIn
+                          ? () =>
+                              this.props.removeOneFromCart(
+                                elem.treehouse,
+                                this.props.user.id
+                              )
+                          : () => this.props.removeOneFromCart(elem.treehouse)
+                      }
+                    >
+                      -
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      onClick={
+                        this.props.isLoggedIn
+                          ? () =>
+                              this.props.deleteAllFromCart(
+                                elem.treehouse,
+                                this.props.user.id
+                              )
+                          : () => this.props.deleteAllFromCart(elem.treehouse)
+                      }
                     >
                       Delete
                     </button>
@@ -51,13 +95,13 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-          <div>Total Price: ${cartPriceTotal / 100}</div>
+          <div>Total Price: ${cartPriceTotal}</div>
 
           {this.props.isLoggedIn ? (
             <button
               type="button"
               onClick={() => {
-                this.props.checkout()
+                this.props.checkout(user.id)
                 this.props.history.push('/checkedOut')
               }}
             >
@@ -76,6 +120,7 @@ class UserCart extends Component {
 
 const mapStateToProps = state => {
   return {
+    treeHouses: state.treeHouses,
     user: state.user,
     cart: state.cart,
     isLoggedIn: !!state.user.id
@@ -84,12 +129,12 @@ const mapStateToProps = state => {
 
 const mapDispatch = dispatch => {
   return {
-    removeTreeHouse: id => {
-      dispatch(removeTreeHouse(id))
-    },
-    checkout: () => {
-      dispatch(checkout())
-    }
+    checkout: userId => dispatch(checkoutThunk(userId)),
+    addToCart: (house, userId) => dispatch(addToCartThunk(house, userId)),
+    removeOneFromCart: (house, userId) =>
+      dispatch(removeOneThunk(house, userId)),
+    deleteAllFromCart: (house, userId) =>
+      dispatch(deleteAllThunk(house, userId))
   }
 }
 

@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User, Treehouse, Cart} = require('../server/db/models')
+const {User, Treehouse, Cart, TreehouseCart} = require('../server/db/models')
 
 async function seed() {
   await db.sync({force: true})
@@ -38,7 +38,7 @@ async function seed() {
     }
   ]
 
-  await Promise.all(
+  const returnedHouses = await Promise.all(
     houses.map(house => {
       return Treehouse.create(house)
     })
@@ -52,6 +52,12 @@ async function seed() {
     Cart.create({active: false, userId: 1}),
     Cart.create({})
   ])
+
+  const fristTreehouse = returnedHouses[0]
+  const firstCart = carts[0]
+  await firstCart.addTreehouse(fristTreehouse)
+  await firstCart.addTreehouse(returnedHouses[2])
+
   console.log(`seeded ${carts.length} carts`)
 }
 
