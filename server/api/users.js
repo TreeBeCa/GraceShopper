@@ -63,6 +63,7 @@ router.get('/:userId/activeCart', async (req, res, next) => {
   }
 })
 
+
 router.get('/:userId/profile', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.userId)
@@ -200,7 +201,6 @@ router.get('/:userId/carts', async (req, res, next) => {
   }
 })
 
-// '/guest/cart'
 router.put('/:userId/checkout', async (req, res, next) => {
   try {
     // find user's current 'active cart'
