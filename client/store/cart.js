@@ -10,6 +10,7 @@ const CHECKOUT = 'CHECKOUT'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const REMOVE_TREEHOUSE = 'REMOVE_TREEHOUSE'
+const REMOVE_ONE = 'REMOVE_ONE'
 
 /**
  * INITIAL STATE
@@ -26,6 +27,11 @@ export const createNewCart = () => ({
 
 export const addToCart = treehouse => ({
   type: ADD_TO_CART,
+  treehouse
+})
+
+export const removeOne = treehouse => ({
+  type: REMOVE_ONE,
   treehouse
 })
 
@@ -65,16 +71,26 @@ export const addToCartThunk = (treehouse, userId) => async dispatch => {
   }
 }
 
-export const editingCart = id => {
-  return async dispatch => {
-    try {
-      const {data} = await axios.delete(`/api/cart-view/${id}`)
-      dispatch(removeTreeHouse(data))
-    } catch (error) {
-      dispatch(console.error(error))
-    }
+export const removeOneThunk = (treehouse, userId) => async dispatch => {
+  if (userId) {
+    await axios.put(`api/users/${userId}/activeCart/remove/${treehouse.id}`)
+    dispatch(removeOne(treehouse))
+  } else {
+    dispatch(removeOne(treehouse))
   }
 }
+
+// export const editingCart = id => {
+//   return async dispatch => {
+//     try {
+//       const { data } = await axios.delete(`/api/cart-view/${id}`)
+//       dispatch(removeTreeHouse(data))
+//     } catch (error) {
+//       dispatch(console.error(error))
+//     }
+//   }
+// }
+
 /**
  * REDUCER
  */
@@ -97,6 +113,27 @@ export default function(cart = [], action) {
         }
       }
       return [...cart, {treehouse: action.treehouse, quantity: 1}]
+    case REMOVE_ONE: {
+      console.log('hi')
+      if (cart.length !== 0) {
+        const matchingTreehouse = cart.find(
+          element => element.treehouse.id === action.treehouse.id
+        )
+        if (matchingTreehouse) {
+          const treehousesInCart = cart.map(element => {
+            if (element.treehouse.id === action.treehouse.id) {
+              element.quantity--
+              console.log('element inside reducer', element)
+              return element
+            }
+            return element
+          })
+          return treehousesInCart.filter(function(element) {
+            return element.quantity > 0
+          })
+        }
+      }
+    }
     case CREATE_NEW_CART:
       return []
     case GET_USER:
@@ -106,7 +143,7 @@ export default function(cart = [], action) {
       const newState = Object.assign([], cart)
       // eslint-disable-next-line no-case-declarations
       let indexOfHouse = cart.findIndex(element => {
-        return element.treeHouse.id === action.houseId
+        return element.treehouse.id === action.houseId
       })
       newState.splice(indexOfHouse, 1)
       return newState
