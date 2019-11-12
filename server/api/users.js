@@ -88,7 +88,10 @@ router.put('/:userId/profile', async (req, res, next) => {
     user.address = req.body.address
     await user.save()
     res.json(user)
-
+  } catch (err) {
+    next(err)
+  }
+})
 // the idea here is :operation can be "add" or "subtract"
 router.put(
   '/:userId/activeCart/:operation/:houseId',
@@ -195,7 +198,6 @@ router.get('/:userId/carts', async (req, res, next) => {
     next(err)
   }
 })
-
 
 // '/guest/cart'
 router.put('/:userId/checkout', async (req, res, next) => {
