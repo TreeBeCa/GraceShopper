@@ -21,7 +21,7 @@ class UserProfilePage extends React.Component {
     }
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
-    this.props.editUserThunk = this.props.editUserThunk.bind(this)
+    // this.props.editUserThunk = this.props.editUserThunk.bind(this)
   }
 
   handleChange(event) {
@@ -31,7 +31,8 @@ class UserProfilePage extends React.Component {
   }
   handleSubmit(event) {
     event.preventDefault()
-    this.props.editUserThunk(this.state)
+    console.log('this', this)
+    editUserThunk(this.state)
     this.setState({
       username: '',
       name: '',
@@ -43,6 +44,7 @@ class UserProfilePage extends React.Component {
   render() {
     const {user} = this.props
     console.log('props', this.props)
+    console.log('this', this)
     return (
       <div>
         <h3>Welcome, {user.username}</h3>
