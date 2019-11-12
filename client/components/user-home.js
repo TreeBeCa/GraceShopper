@@ -21,6 +21,7 @@ class UserProfilePage extends React.Component {
     }
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
+    this.props.editUserThunk = this.props.editUserThunk.bind(this)
   }
 
   handleChange(event) {
@@ -56,7 +57,12 @@ class UserProfilePage extends React.Component {
         <hr />
         <Route
           path="/home/edit"
-          render={() => <EditUserForm handleChange={this.handleChange} />}
+          render={() => (
+            <EditUserForm
+              handleChange={this.handleChange}
+              handleSubmit={this.handleSubmit}
+            />
+          )}
         />
       </div>
     )
@@ -73,7 +79,7 @@ const mapState = state => {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    editUserThunk: userId => dispatch(editUserThunk(userId))
+    editUserThunk: user => dispatch(editUserThunk(user))
   }
 }
 

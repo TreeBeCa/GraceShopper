@@ -77,6 +77,7 @@ export const getCartThunk = userId => {
 }
 export const editUserThunk = user => async dispatch => {
   try {
+    console.log('editUserTHUNK')
     const res = await axios.put(`/api/users/${user.id}/profile`, user.body)
     dispatch(editUser(res))
   } catch (err) {
@@ -97,7 +98,13 @@ export default function(state = defaultUser, action) {
       return action.userId
     }
     case EDIT_USER: {
-      return {...state, user: action.user}
+      return {
+        ...state,
+        name: action.name,
+        email: action.email,
+        username: action.username,
+        address: action.address
+      }
     }
     default:
       return state
