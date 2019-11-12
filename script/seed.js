@@ -47,11 +47,7 @@ async function seed() {
   console.log(`seeded ${houses.length} users`)
   console.log(`seeded successfully`)
 
-  const carts = await Promise.all([
-    Cart.create({active: true, userId: 1}),
-    Cart.create({active: false, userId: 1}),
-    Cart.create({})
-  ])
+  const carts = await Promise.all([Cart.create({active: true, userId: 1})])
 
   const fristTreehouse = returnedHouses[0]
   const firstCart = carts[0]

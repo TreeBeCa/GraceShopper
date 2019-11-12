@@ -72,9 +72,7 @@ router.put(
       if (found) {
         // if it is, adjust the quantity
         if (operation === 'add') {
-          console.log('incrementing quantity')
           found.TreehouseCart.quantity++
-          console.log(found.TreehouseCart.quantity)
         } else if (operation === 'remove') {
           found.TreehouseCart.quantity--
           if (found.TreehouseCart.quantity < 1) {
@@ -85,7 +83,6 @@ router.put(
       } else if (operation === 'add') {
         // if not, and we want to add, add
         // decrimenting an item not in the cart does nothing
-        console.log('house not found, adding it now')
         await cart.addTreehouse(house.id, {through: {quantity: 1}})
       }
       res.sendStatus(200)
@@ -151,7 +148,6 @@ router.put('/:userId/checkout', async (req, res, next) => {
     //total up the price
     let total = 0
     const treehouses = await activeCart.getTreehouses()
-    console.log('treehouses:', treehouses)
 
     treehouses.forEach(treehouse => {
       total += treehouse.TreehouseCart.quantity * treehouse.price * 100
