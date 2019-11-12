@@ -10,6 +10,17 @@ const adapter = new Adapter()
 enzyme.configure({adapter})
 
 describe('UserHome', () => {
+
+  // let userProfilePage
+  // beforeEach(() => {
+  //   userProfilePage = shallow(<UserProfilePage email="cody@email.com" />)
+  // })
+  // it('renders the email in an h3', () => {
+  //   expect(userProfilePage.find('h3').text()).to.be.equal(
+  //     'Welcome, cody@email.com'
+  //   )
+  // })
+
   let userHome
 
   beforeEach(() => {
@@ -19,4 +30,5 @@ describe('UserHome', () => {
   it('renders the email in an h3', () => {
     expect(userHome.find('h3').text()).to.be.equal('Welcome, cody@email.com')
   })
+
 })
