@@ -9,7 +9,7 @@ import {editUserThunk} from '../store'
  * COMPONENT
  */
 
-class UserProfilePage extends React.Component {
+class UserHome extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -96,7 +96,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapState, mapDispatchToProps)(UserProfilePage)
+export default connect(mapState, mapDispatchToProps)(UserHome)
 
 // export const UserHome = props => {
 //   const {email} = props
