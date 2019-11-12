@@ -48,6 +48,17 @@ const EditUserForm = props => (
         />
       </div>
       <div>
+        <label htmlFor="profileimg">
+          <small>Profile Img</small>
+        </label>
+        <input
+          name="profileImgUrl"
+          type="text"
+          value={props.user.profileImgUrl}
+          onChange={props.handleChange}
+        />
+      </div>
+      <div>
         <button type="submit" onSubmit={props.handleSubmit}>
           update
         </button>

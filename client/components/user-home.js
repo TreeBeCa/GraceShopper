@@ -17,7 +17,8 @@ class UserProfilePage extends React.Component {
       username: '',
       name: '',
       email: '',
-      address: ''
+      address: '',
+      profileImgUrl: ''
     }
     this.props = this.props
     this.handleChange = this.handleChange.bind(this)
@@ -38,6 +39,7 @@ class UserProfilePage extends React.Component {
       name: this.state.name || user.name,
       address: this.state.address || user.address,
       email: this.state.email || user.email,
+      profileImgUrl: this.state.profileImgUrl || user.profileImgUrl,
       id: user.id //<-- needs id to be pass from props into thunk
     }
     console.log('handlesubmit: ', updatedUser)
@@ -46,7 +48,8 @@ class UserProfilePage extends React.Component {
       username: '',
       name: '',
       email: '',
-      address: ''
+      address: '',
+      profileImgUrl: ''
     })
   }
 

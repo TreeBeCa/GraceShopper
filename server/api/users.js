@@ -63,6 +63,7 @@ router.put('/:userId/profile', async (req, res, next) => {
     user.email = req.body.email
     user.username = req.body.username
     user.profileImgUrl = req.body.profileImgUrl
+    user.address = req.body.address
     await user.save()
     res.json(user)
   } catch (err) {
