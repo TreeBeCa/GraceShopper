@@ -31,9 +31,8 @@ export const me = () => async dispatch => {
     //if there is a logged in user, also get their cart
     if (res.data) {
       user = res.data
-      const cartRes = await axios.get(`/api/users/${user.id}/activeCart`)
-      console.log(cartRes.data)
-      if (cartRes.data) {
+      if (user.id) {
+        const cartRes = await axios.get(`/api/users/${user.id}/activeCart`)
         cart = cartRes.data
       }
     }

@@ -54,13 +54,16 @@ export const deleteAllFromCart = treehouse => ({
  * THUNK CREATORS
  */
 
-export const checkoutThunk = (userId, cart) => async dispatch => {
+export const checkoutThunk = userId => async dispatch => {
   try {
     /***
-     * TODO: save the user's cart with active: false
+     * Save the user's cart with active: false
      * and then dispatch the checkout action creator
      * to clear the store
      * */
+
+    await axios.put(`/api/users/${userId}/checkout`)
+    dispatch(checkout())
   } catch (error) {
     dispatch(console.error(error))
   }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {
-  checkout,
+  checkoutThunk,
   // removeTreeHouse,
   addToCartThunk,
   removeOneThunk,
@@ -18,7 +18,7 @@ class UserCart extends Component {
   // }
 
   render() {
-    const cart = this.props.cart
+    const {cart, user} = this.props
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
@@ -41,7 +41,7 @@ class UserCart extends Component {
               {cart.map(elem => (
                 <tr key={elem.treehouse.id}>
                   <td>{elem.treehouse.name}</td>
-                  <td>{elem.treehouse.price / 100}</td>
+                  <td>${elem.treehouse.price}</td>
                   <td>{elem.quantity}</td>
                   <td>
                     <button
@@ -95,13 +95,13 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-          <div>Total Price: ${cartPriceTotal / 100}</div>
+          <div>Total Price: ${cartPriceTotal}</div>
 
           {this.props.isLoggedIn ? (
             <button
               type="button"
               onClick={() => {
-                this.props.checkout()
+                this.props.checkout(user.id)
                 this.props.history.push('/checkedOut')
               }}
             >
@@ -129,10 +129,7 @@ const mapStateToProps = state => {
 
 const mapDispatch = dispatch => {
   return {
-    checkout: () => dispatch(checkout()),
-    // removeTreeHouse: id => {
-    //   dispatch(removeTreeHouse(id))
-    // },
+    checkout: userId => dispatch(checkoutThunk(userId)),
     addToCart: (house, userId) => dispatch(addToCartThunk(house, userId)),
     removeOneFromCart: (house, userId) =>
       dispatch(removeOneThunk(house, userId)),
