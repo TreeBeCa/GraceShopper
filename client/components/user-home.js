@@ -7,7 +7,7 @@ import OrderHistory from './orderHistory'
 /**
  * COMPONENT
  */
-const UserHome = props => {
+export const UserHome = props => {
   const {email} = props
 
   return (
