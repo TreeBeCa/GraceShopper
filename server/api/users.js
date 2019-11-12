@@ -64,7 +64,6 @@ router.get('/:userId/activeCart', async (req, res, next) => {
 })
 
 // the idea here is :operation can be "add" or "subtract"
-// this isn't working
 router.put(
   '/:userId/activeCart/:operation/:houseId',
   async (req, res, next) => {
@@ -89,7 +88,8 @@ router.put(
       //find the treehouse
       const house = await Treehouse.findByPk(houseId)
       // is this treehouse already in our cart?
-      const found = cart.treehouses.find(elem => elem.id === house.id)
+      const treehouses = await cart.getTreehouses()
+      const found = treehouses.find(elem => elem.id === house.id)
       if (found) {
         // if it is, adjust the quantity
         if (operation === 'add') {
@@ -139,7 +139,6 @@ router.delete('/:userId/activeCart/delete/:houseId', async (req, res, next) => {
   }
 })
 
-//this is broken for some reason
 router.get('/:userId/carts', async (req, res, next) => {
   try {
     const data = await User.findByPk(req.params.userId, {
@@ -147,12 +146,25 @@ router.get('/:userId/carts', async (req, res, next) => {
     })
     const carts = data.carts
     const treehousesInCarts = await Promise.all(
-      carts.map(cart => Cart.findByPk(cart.id), {
-        include: [{model: Treehouse}]
-      })
+      carts.map(cart =>
+        Cart.findByPk(cart.id, {
+          include: [{model: Treehouse}]
+        }))
     )
 
-    res.json(treehousesInCarts)
+    const formated = treehousesInCarts.map(current => ({
+      id: current.id,
+      active: current.active,
+      total: current.total,
+      orderDate: current.orderDate,
+      treehouses: current.treehouses.map(elem => ({
+        id: elem.id,
+        name: elem.name,
+        quantity: elem.TreehouseCart.quantity
+      }))
+    }))
+
+    res.json(formated)
   } catch (err) {
     next(err)
   }
@@ -177,7 +189,7 @@ router.put('/:userId/checkout', async (req, res, next) => {
 
     // set the order date
     const now = new Date()
-    activeCart.orderDate = now.getDate()
+    activeCart.orderDate = now
 
     // set active to false
     activeCart.active = false
