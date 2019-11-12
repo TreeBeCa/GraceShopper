@@ -139,11 +139,13 @@ router.put('/:userId/checkout', async (req, res, next) => {
       include: [{model: Cart}]
     })
     const activeCart = user.carts.find(cart => cart.active === true)
-
     //total up the price
     let total = 0
-    activeCart.treehouses.forEach(treehouse => {
-      total += treehouse.TreehouseCart.quantity * treehouse.price
+    const treehouses = await activeCart.getTreehouses()
+    console.log('treehouses:', treehouses)
+
+    treehouses.forEach(treehouse => {
+      total += treehouse.TreehouseCart.quantity * treehouse.price * 100
     })
     activeCart.total = total
 
