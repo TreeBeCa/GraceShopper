@@ -2,19 +2,20 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {
   checkout,
-  removeTreeHouse,
+  // removeTreeHouse,
   addToCartThunk,
-  removeOneThunk
+  removeOneThunk,
+  deleteAllThunk
 } from '../store'
 
 class UserCart extends Component {
-  deleteButtton(id) {
-    try {
-      this.props.removeTreeHouse(id)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // deleteButtton(id) {
+  //   try {
+  //     this.props.removeTreeHouse(id)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   render() {
     const cart = this.props.cart
@@ -76,9 +77,15 @@ class UserCart extends Component {
                   <td>
                     <button
                       type="button"
-                      onClick={() => {
-                        this.deleteButtton(elem.treehouse.id)
-                      }}
+                      onClick={
+                        this.props.isLoggedIn
+                          ? () =>
+                              this.props.deleteAllFromCart(
+                                elem.treehouse,
+                                this.props.user.id
+                              )
+                          : () => this.props.deleteAllFromCart(elem.treehouse)
+                      }
                     >
                       Delete
                     </button>
@@ -123,12 +130,14 @@ const mapStateToProps = state => {
 const mapDispatch = dispatch => {
   return {
     checkout: () => dispatch(checkout()),
-    removeTreeHouse: id => {
-      dispatch(removeTreeHouse(id))
-    },
+    // removeTreeHouse: id => {
+    //   dispatch(removeTreeHouse(id))
+    // },
     addToCart: (house, userId) => dispatch(addToCartThunk(house, userId)),
     removeOneFromCart: (house, userId) =>
-      dispatch(removeOneThunk(house, userId))
+      dispatch(removeOneThunk(house, userId)),
+    deleteAllFromCart: (house, userId) =>
+      dispatch(deleteAllThunk(house, userId))
   }
 }
 
