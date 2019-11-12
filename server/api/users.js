@@ -19,7 +19,7 @@ router.get('/', isAdminMiddleware, async (req, res, next) => {
   }
 })
 
-router.get('/:userId', isAdminMiddleware, async (req, res, next) => {
+router.get('/:userId', isUserMiddleware, async (req, res, next) => {
   try {
     const singleUser = await User.findByPk(req.params.userId, {
       include: [{model: Cart}]
@@ -69,6 +69,7 @@ router.get('/:userId/activeCart', isUserMiddleware, async (req, res, next) => {
 // this isn't working
 router.put(
   '/:userId/activeCart/:operation/:houseId',
+  isUserMiddleware,
   async (req, res, next) => {
     const {userId, operation, houseId} = req.params
     try {
@@ -118,28 +119,32 @@ router.put(
   }
 )
 
-router.delete('/:userId/activeCart/delete/:houseId', async (req, res, next) => {
-  try {
-    const {userId, houseId} = req.params
-    const user = await User.findByPk(userId, {
-      include: [{model: Cart}]
-    })
-    const activeCart = user.carts.find(cart => cart.active === true)
-    let cart
-    if (activeCart) {
-      const activeCartId = user.carts[0].id
-      cart = await Cart.findByPk(activeCartId, {
-        include: [{model: Treehouse}]
+router.delete(
+  '/:userId/activeCart/delete/:houseId',
+  isUserMiddleware,
+  async (req, res, next) => {
+    try {
+      const {userId, houseId} = req.params
+      const user = await User.findByPk(userId, {
+        include: [{model: Cart}]
       })
+      const activeCart = user.carts.find(cart => cart.active === true)
+      let cart
+      if (activeCart) {
+        const activeCartId = user.carts[0].id
+        cart = await Cart.findByPk(activeCartId, {
+          include: [{model: Treehouse}]
+        })
+      }
+      //query the house to delete
+      const house = await Treehouse.findByPk(houseId)
+      await cart.removeTreehouse(house)
+      res.sendStatus(200)
+    } catch (error) {
+      next(error)
     }
-    //query the house to delete
-    const house = await Treehouse.findByPk(houseId)
-    await cart.removeTreehouse(house)
-    res.sendStatus(200)
-  } catch (error) {
-    next(error)
   }
-})
+)
 
 //this is broken for some reason
 router.get('/:userId/carts', async (req, res, next) => {
