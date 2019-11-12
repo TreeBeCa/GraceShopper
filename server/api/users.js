@@ -98,6 +98,9 @@ router.put(
           console.log(found.TreehouseCart.quantity)
         } else if (operation === 'remove') {
           found.TreehouseCart.quantity--
+          if (found.TreehouseCart.quantity < 1) {
+            await cart.removeTreehouse(house)
+          }
         }
         found.TreehouseCart.save()
       } else if (operation === 'add') {
@@ -112,6 +115,29 @@ router.put(
     }
   }
 )
+
+router.delete('/:userId/activeCart/delete/:houseId', async (req, res, next) => {
+  try {
+    const {userId, houseId} = req.params
+    const user = await User.findByPk(userId, {
+      include: [{model: Cart}]
+    })
+    const activeCart = user.carts.find(cart => cart.active === true)
+    let cart
+    if (activeCart) {
+      const activeCartId = user.carts[0].id
+      cart = await Cart.findByPk(activeCartId, {
+        include: [{model: Treehouse}]
+      })
+    }
+    //query the house to delete
+    const house = await Treehouse.findByPk(houseId)
+    await cart.removeTreehouse(house)
+    res.sendStatus(200)
+  } catch (error) {
+    next(error)
+  }
+})
 
 //this is broken for some reason
 router.get('/:userId/carts', async (req, res, next) => {
