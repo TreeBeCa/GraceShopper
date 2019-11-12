@@ -7,6 +7,7 @@ import history from '../history'
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
 const GET_CART = 'GET_CART'
+const EDIT_USER = 'EDIT_USER'
 
 /**
  * INITIAL STATE
@@ -21,6 +22,10 @@ const removeUser = () => ({type: REMOVE_USER})
 export const getCart = userId => ({
   type: GET_CART,
   userId
+})
+const editUser = user => ({
+  type: EDIT_USER,
+  user
 })
 
 /**
@@ -70,14 +75,12 @@ export const getCartThunk = userId => {
     }
   }
 }
-export const getUserThunk = userId => {
-  return async dispatch => {
-    try {
-      const {data} = await axios.get(`/api/users/${userId}`)
-      dispatch(getUser(data))
-    } catch (err) {
-      console.error(err)
-    }
+export const editUserThunk = user => async dispatch => {
+  try {
+    const res = await axios.put(`/api/users/${user.id}/profile`, user.body)
+    dispatch(editUser(res))
+  } catch (err) {
+    console.error(err)
   }
 }
 
@@ -92,6 +95,9 @@ export default function(state = defaultUser, action) {
       return defaultUser
     case GET_CART: {
       return action.userId
+    }
+    case EDIT_USER: {
+      return {...state, user: action.user}
     }
     default:
       return state

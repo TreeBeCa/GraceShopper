@@ -59,6 +59,7 @@ router.get('/:userId/profile', async (req, res, next) => {
 router.put('/:userId/profile', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.userId)
+    user.name = req.body.name
     user.email = req.body.email
     user.username = req.body.username
     user.profileImgUrl = req.body.profileImgUrl

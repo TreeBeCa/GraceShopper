@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link, Route} from 'react-router-dom'
 import EditUserForm from './editUserForm'
+import axios from 'axios'
+import {editUserThunk} from '../store'
 
 /**
  * COMPONENT
@@ -11,11 +13,30 @@ import EditUserForm from './editUserForm'
 class UserProfilePage extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      username: '',
+      name: '',
+      email: '',
+      address: ''
+    }
+    this.props = this.props
     this.handleChange = this.handleChange.bind(this)
   }
 
   handleChange(event) {
-    //todo
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
+  handleSubmit(event) {
+    event.preventDefault()
+    this.props.editUserThunk(this.state)
+    this.setState({
+      username: '',
+      name: '',
+      email: '',
+      address: ''
+    })
   }
 
   render() {
@@ -50,8 +71,13 @@ const mapState = state => {
     user: state.user
   }
 }
+const mapDispatchToProps = dispatch => {
+  return {
+    editUserThunk: userId => dispatch(editUserThunk(userId))
+  }
+}
 
-export default connect(mapState)(UserProfilePage)
+export default connect(mapState, mapDispatchToProps)(UserProfilePage)
 
 // export const UserHome = props => {
 //   const {email} = props
