@@ -11,10 +11,7 @@ const isAdminMiddleware = (req, res, next) => {
 }
 
 const isUserMiddleware = (req, res, next) => {
-  // console.log('inside userMiddleware')
-  // console.log('userMiddleware', req.user)
-  // console.log('req.params.userId', req.params.userId)
-  // console.log('req.user.id', req.user.id)
+  //if there is a req.user, their id should match the paramsId of the route
 
   if (req.user !== undefined) {
     const paramsUserId = parseInt(req.params.userId)
