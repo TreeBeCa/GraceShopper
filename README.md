@@ -29,6 +29,8 @@ npm run start-dev
 
 npm run test
 
+<img src='https://files.slack.com/files-pri/T024FPYBQ-FQJ3FDMN3/screen_shot_2019-11-12_at_11.04.27_pm.png'/>
+
 # Contributing
 
 When contributing to this repository, please first discuss the change you wish to make with the owners of this repository before making a change.
