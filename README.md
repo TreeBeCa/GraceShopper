@@ -2,7 +2,7 @@
 
 An eCommerce site for all your treehouse needs. Our first group project at Fullstack Academy.
 
-At Treebeca the customer can shopping online treehouses, choosing from Basic, Intermediate and Advance treehouse and processing their checkout. AT Treebeca website a visitor can find all product(s), add them to their "cart" and securely enter their checkout information to complete the purchase.
+At Treebeca the customer can shopping online treehouses, choosing from Basic, Intermediate and Advance treehouse and processing their checkout. At Treebeca website a visitor can find all product(s), add them to their "cart" and securely enter their checkout information to complete the purchase.
 
 # Deployment
 
@@ -11,7 +11,7 @@ https://treebeca-grace-shopper.herokuapp.com/
 # Built With
 
 React
-redux
+Redux
 Express
 Sequelize
 Travis
@@ -35,7 +35,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
-# Team Expetations
+# Team Expectations
 
 * If you have a blocking issue, slack before interrupting another’s train of coding-thought.
 * We will assign tasks vertically (instead of horizontally).
