@@ -83,9 +83,7 @@ export const logout = () => async dispatch => {
 export const editUserThunk = user => async dispatch => {
   try {
     const res = await axios.put(`/api/users/${user.id}/profile`, user)
-    console.log('thunk data:', user)
-    console.log('thunk res', res)
-    dispatch(editUser(res))
+    dispatch(editUser(user))
   } catch (err) {
     console.error(err)
   }
@@ -101,17 +99,7 @@ export default function(state = defaultUser, action) {
     case REMOVE_USER:
       return defaultUser
     case EDIT_USER:
-      if (state.id === action.user.id) {
-        return {
-          ...state,
-          name: action.name,
-          email: action.email,
-          username: action.username,
-          address: action.address
-        }
-      } else {
-        return state
-      }
+      return action.user
     default:
       return state
   }
