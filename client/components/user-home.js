@@ -67,6 +67,7 @@ class UserHome extends React.Component {
         Profile Img: <img className="profileImage" src={user.profileImgUrl} />
         <br />
         <Link to="/home/edit">Edit your account</Link>
+        <br />
         <Link to="/home/history">Past Orders</Link>
         <hr />
         <Route
