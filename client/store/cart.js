@@ -132,7 +132,6 @@ export default function(cart = [], action) {
       }
       return [...cart, {treehouse: action.treehouse, quantity: 1}]
     case REMOVE_ONE: {
-      console.log('hi')
       if (cart.length !== 0) {
         const matchingTreehouse = cart.find(
           element => element.treehouse.id === action.treehouse.id

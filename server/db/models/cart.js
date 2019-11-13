@@ -16,7 +16,12 @@ const Cart = db.define('cart', {
     }
   },
   orderDate: {
-    type: Sequelize.DATE
+    type: Sequelize.DATE,
+    get() {
+      const date = this.getDataValue('orderDate')
+      if (date) return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      return ''
+    }
   }
 })
 

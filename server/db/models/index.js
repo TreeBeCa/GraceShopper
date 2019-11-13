@@ -13,6 +13,16 @@ const TreehouseCart = require('./treehouseCart')
 Cart.belongsTo(User)
 User.hasMany(Cart)
 
+User.prototype.getActiveCart = async function() {
+  const carts = await this.getCarts()
+  let cart = carts.find(elem => elem.active)
+  if (cart) return cart
+
+  const newCart = await Cart.create({active: true})
+  await newCart.setUser(this)
+  return newCart
+}
+
 Treehouse.belongsToMany(Cart, {through: TreehouseCart})
 Cart.belongsToMany(Treehouse, {through: TreehouseCart})
 

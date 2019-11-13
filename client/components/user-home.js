@@ -2,15 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link, Route} from 'react-router-dom'
+import OrderHistory from './orderHistory'
 import EditUserForm from './editUserForm'
-import axios from 'axios'
 import {editUserThunk} from '../store'
 
 /**
  * COMPONENT
  */
 
-class UserProfilePage extends React.Component {
+class UserHome extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -67,6 +67,8 @@ class UserProfilePage extends React.Component {
         Profile Img: <img className="profileImage" src={user.profileImgUrl} />
         <br />
         <Link to="/home/edit">Edit your account</Link>
+        <br />
+        <Link to="/home/history">Past Orders</Link>
         <hr />
         <Route
           path="/home/edit"
@@ -78,6 +80,7 @@ class UserProfilePage extends React.Component {
             />
           )}
         />
+        <Route path="/home/history" render={() => <OrderHistory />} />
       </div>
     )
   }
@@ -91,38 +94,18 @@ const mapState = state => {
     user: state.user
   }
 }
+
 const mapDispatchToProps = dispatch => {
   return {
     editUserThunk: user => dispatch(editUserThunk(user))
   }
 }
 
-export default connect(mapState, mapDispatchToProps)(UserProfilePage)
+export default connect(mapState, mapDispatchToProps)(UserHome)
 
-// export const UserHome = props => {
-//   const {email} = props
-
-//   return (
-//     <div>
-//       <h3>Welcome, {email}</h3>
-//     </div>
-//   )
-// }
-
-// /**
-//  * CONTAINER
-//  */
-// const mapState = state => {
-//   return {
-//     email: state.user.email
-//   }
-// }
-
-// export default connect(mapState)(UserHome)
-
-// /**
-//  * PROP TYPES
-//  */
-// UserHome.propTypes = {
-//   email: PropTypes.string
-// }
+/**
+ * PROP TYPES
+ */
+UserHome.propTypes = {
+  email: PropTypes.string
+}

@@ -9,8 +9,7 @@ import {
   UserHome,
   AllProducts,
   UserCart,
-  CheckedOut,
-  UserProfilePage
+  CheckedOut
 } from './components'
 import {me} from './store'
 
@@ -43,7 +42,6 @@ class Routes extends Component {
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
-            <Route path="/userprofile" component={UserProfilePage} />
           </Switch>
         )}
       </Switch>
