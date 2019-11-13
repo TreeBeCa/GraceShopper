@@ -29,7 +29,9 @@ npm run start-dev
 
 npm run test
 
-<img src='https://files.slack.com/files-pri/T024FPYBQ-FQJ3FDMN3/screen_shot_2019-11-12_at_11.04.27_pm.png'/>
+## Database Schema
+
+<img src="https://raw.githubusercontent.com/TreeBeCa/GraceShopper/assets/grace-shopper-schema.png" />
 
 # Contributing
 
