@@ -2,32 +2,26 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {
   checkoutThunk,
-  // removeTreeHouse,
   addToCartThunk,
   removeOneThunk,
   deleteAllThunk
 } from '../store'
 
 class UserCart extends Component {
-  // deleteButtton(id) {
-  //   try {
-  //     this.props.removeTreeHouse(id)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-
   render() {
     const {cart, user} = this.props
     let cartPriceTotal = 0
     if (cart.length) {
       cart.forEach(element => {
-        let treehousePrice = element.treehouse.price
+        console.log(element.treehouse.price)
+        let treehousePrice = element.treehouse.price * 100
         let quantity = element.quantity
         let total = treehousePrice * quantity
         cartPriceTotal += total
       })
+      cartPriceTotal = cartPriceTotal / 100
     }
+
     if (cart.length) {
       return (
         <div>

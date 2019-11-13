@@ -79,8 +79,8 @@ tr td {
   border: 1px solid black;
 }
 
-/* .form {
-   display:flex;
-  flex-direction: row-reverse;
-   align-self: flex-end;
-} */
+/* user profile */
+
+.profileImage {
+  width: 100px;
+}

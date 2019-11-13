@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const {User, Cart, Treehouse} = require('../db/models')
+const {isAdminMiddleware, isUserMiddleware} = require('../security')
 module.exports = router
 
 //mounted on api/users
-router.get('/', async (req, res, next) => {
+router.get('/', isAdminMiddleware, async (req, res, next) => {
   try {
     const users = await User.findAll({
       // explicitly select only the id and email fields - even though
@@ -17,7 +18,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/:userId', async (req, res, next) => {
+router.get('/:userId', isUserMiddleware, async (req, res, next) => {
   try {
     const singleUser = await User.findByPk(req.params.userId, {
       include: [{model: Cart}]
@@ -30,34 +31,55 @@ router.get('/:userId', async (req, res, next) => {
 
 //this route is working great, and matches the
 // data format expected by redux
-router.get('/:userId/activeCart', async (req, res, next) => {
+router.get('/:userId/activeCart', isUserMiddleware, async (req, res, next) => {
   try {
-    const data = await User.findByPk(req.params.userId, {
-      include: [{model: Cart}]
-    })
-    const activeCart = data.carts.find(cart => cart.active === true)
+    const user = await User.findByPk(req.params.userId)
+    const activeCart = await user.getActiveCart()
+    const treehousesInCart = await activeCart.getTreehouses()
 
-    if (activeCart) {
-      const activeCartId = activeCart.id
-      const treehousesInCart = await Cart.findByPk(activeCartId, {
-        include: [{model: Treehouse}]
+    res.json(
+      treehousesInCart.map(treehouse => {
+        return {
+          treehouse: {
+            id: treehouse.id,
+            name: treehouse.name,
+            price: treehouse.price,
+            description: treehouse.description
+          },
+          quantity: treehouse.TreehouseCart.quantity
+        }
       })
-      res.json(
-        treehousesInCart.treehouses.map(treehouse => {
-          return {
-            treehouse: {
-              id: treehouse.id,
-              name: treehouse.name,
-              price: treehouse.price,
-              description: treehouse.description
-            },
-            quantity: treehouse.TreehouseCart.quantity
-          }
-        })
-      )
-    } else {
-      res.json([])
+    )
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:userId/profile', isUserMiddleware, async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    const limited = {
+      email: user.email,
+      id: user.id,
+      username: user.username,
+      profileImgUrl: user.profileImgUrl
     }
+    res.json(limited)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:userId/profile', isUserMiddleware, async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    user.name = req.body.name
+    user.email = req.body.email
+    user.username = req.body.username
+    user.profileImgUrl = req.body.profileImgUrl
+    user.address = req.body.address
+    await user.save()
+    res.json(user)
   } catch (err) {
     next(err)
   }
@@ -66,25 +88,14 @@ router.get('/:userId/activeCart', async (req, res, next) => {
 // the idea here is :operation can be "add" or "subtract"
 router.put(
   '/:userId/activeCart/:operation/:houseId',
+  isUserMiddleware,
   async (req, res, next) => {
     const {userId, operation, houseId} = req.params
     try {
-      // find user's current 'active cart', if any
-      const user = await User.findByPk(userId, {
-        include: [{model: Cart}]
-      })
-      const activeCart = user.carts.find(cart => cart.active === true)
+      // grab user's current 'active cart'
+      const user = await User.findByPk(req.params.userId)
+      const cart = await user.getActiveCart()
 
-      let cart
-      if (activeCart) {
-        const activeCartId = user.carts[0].id
-        cart = await Cart.findByPk(activeCartId, {
-          include: [{model: Treehouse}]
-        })
-      } else {
-        cart = await Cart.create({active: true})
-        cart.setUser(user)
-      }
       //find the treehouse
       const house = await Treehouse.findByPk(houseId)
       // is this treehouse already in our cart?
@@ -93,9 +104,7 @@ router.put(
       if (found) {
         // if it is, adjust the quantity
         if (operation === 'add') {
-          console.log('incrementing quantity')
           found.TreehouseCart.quantity++
-          console.log(found.TreehouseCart.quantity)
         } else if (operation === 'remove') {
           found.TreehouseCart.quantity--
           if (found.TreehouseCart.quantity < 1) {
@@ -106,7 +115,6 @@ router.put(
       } else if (operation === 'add') {
         // if not, and we want to add, add
         // decrimenting an item not in the cart does nothing
-        console.log('house not found, adding it now')
         await cart.addTreehouse(house.id, {through: {quantity: 1}})
       }
       res.sendStatus(200)
@@ -116,30 +124,26 @@ router.put(
   }
 )
 
-router.delete('/:userId/activeCart/delete/:houseId', async (req, res, next) => {
-  try {
-    const {userId, houseId} = req.params
-    const user = await User.findByPk(userId, {
-      include: [{model: Cart}]
-    })
-    const activeCart = user.carts.find(cart => cart.active === true)
-    let cart
-    if (activeCart) {
-      const activeCartId = user.carts[0].id
-      cart = await Cart.findByPk(activeCartId, {
-        include: [{model: Treehouse}]
-      })
+router.delete(
+  '/:userId/activeCart/delete/:houseId',
+  isUserMiddleware,
+  async (req, res, next) => {
+    try {
+      const {userId, houseId} = req.params
+      // get active cart
+      const user = await User.findByPk(userId)
+      const activeCart = await user.getActiveCart()
+      //query the house to delete
+      const house = await Treehouse.findByPk(houseId)
+      await activeCart.removeTreehouse(house)
+      res.sendStatus(200)
+    } catch (error) {
+      next(error)
     }
-    //query the house to delete
-    const house = await Treehouse.findByPk(houseId)
-    await cart.removeTreehouse(house)
-    res.sendStatus(200)
-  } catch (error) {
-    next(error)
   }
-})
+)
 
-router.get('/:userId/carts', async (req, res, next) => {
+router.get('/:userId/carts', isUserMiddleware, async (req, res, next) => {
   try {
     const data = await User.findByPk(req.params.userId, {
       include: [{model: Cart}]
@@ -170,7 +174,7 @@ router.get('/:userId/carts', async (req, res, next) => {
   }
 })
 
-router.put('/:userId/checkout', async (req, res, next) => {
+router.put('/:userId/checkout', isUserMiddleware, async (req, res, next) => {
   try {
     // find user's current 'active cart'
     const user = await User.findByPk(req.params.userId, {
@@ -180,11 +184,13 @@ router.put('/:userId/checkout', async (req, res, next) => {
     //total up the price
     let total = 0
     const treehouses = await activeCart.getTreehouses()
-    console.log('treehouses:', treehouses)
 
     treehouses.forEach(treehouse => {
-      total += treehouse.TreehouseCart.quantity * treehouse.price * 100
+      // console.log('treehouse.price', treehouse.price * 100)
+      let formatPrice = treehouse.price * 100
+      total += treehouse.TreehouseCart.quantity * formatPrice
     })
+    console.log('checkout', total)
     activeCart.total = total
 
     // set the order date

@@ -3,6 +3,21 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
+  username: {
+    type: Sequelize.STRING,
+    defaultValue: 'anon'
+  },
+  name: {
+    type: Sequelize.STRING
+  },
+  address: {
+    type: Sequelize.STRING
+  },
+  profileImgUrl: {
+    type: Sequelize.STRING,
+    defaultValue:
+      'https://mpng.pngfly.com/20180802/icj/kisspng-user-profile-default-computer-icons-network-video-the-foot-problems-of-the-disinall-foot-care-founde-5b6346121ec769.0929994515332326581261.jpg'
+  },
   email: {
     type: Sequelize.STRING,
     unique: true,
