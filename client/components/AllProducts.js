@@ -12,7 +12,8 @@ class AllProducts extends Component {
       <div className="TreeHouseContainer">
         {treeHouses.map(house => (
           <div className="SingleTreeHouse" key={house.id}>
-            <h2>{house.name}</h2> ${house.price}
+            <h2 className="SingleTreeHouseLabels">{house.name}</h2> $
+            {house.price}
             <br />
             <img src={house.imageUrl} />
             <br />
