@@ -15,7 +15,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   backface-visibility: hidden;
-  height: 150vh;
+  height: 200vh;
   padding: 30;
   margin: 30;
   width: 100vw;
@@ -87,6 +87,12 @@ form div {
   align-self: center;
   /* align-content: flex-end;
   align-content: flex-end; */
+  padding: 60px;
+  color: black;
+  border: 1px solid orange;
+  background-color: rgb(245, 245, 220, 0.5);
+  width: 50%;
+  height: 10%;
 }
 
 .SingleTreeHouseLabels {
@@ -107,8 +113,14 @@ form div {
 }
 
 /* .checkout  */
+
 table {
-  width: 50%;
+  padding: 60px;
+  color: black;
+  font-size: 20px;
+  border: 1px solid orange;
+  background-color: rgb(245, 245, 220, 0.5);
+  width: 70%;
 }
 
 tr td {
@@ -119,4 +131,12 @@ tr td {
 
 .profileImage {
   width: 100px;
+}
+
+.totalprice {
+  border: black;
+  background-color: 1px solid orange;
+  padding: 60px;
+  color: orange;
+  font-size: 20px;
 }
