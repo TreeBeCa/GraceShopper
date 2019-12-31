@@ -4,17 +4,31 @@
 }
 
 body {
-  display: flex;
+  /* display: flex;
   height: 100vh;
   width: 100vw;
   padding: 10px;
-  margin: 0;
+  margin: 0; */
+  /* background: linear-gradient(#ffffff, #2e8b57); */
+  background-image: url('https://images.unsplash.com/photo-1446685160726-504685f66413?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  backface-visibility: hidden;
+  height: 200vh;
+  padding: 30;
+  margin: 30;
+  width: 100vw;
 }
 
 main {
+  /* display: flex;
+  flex-direction: column;
+  align-items: flex-start; */
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
 }
 
 a {
@@ -26,10 +40,19 @@ label {
 }
 
 nav {
-  width: 70vw;
+  /* width: 70vw;
   margin: 5;
-  background-color: darkgreen;
+  background-color: #228b22;
   display: flex;
+  justify-content: flex-end; */
+  align-items: center;
+  background-color: #2e8b57;
+  color: #90ddeb;
+  display: flex;
+  height: 80px;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 20;
   justify-content: flex-end;
 }
 
@@ -38,6 +61,10 @@ nav a {
   text-align: left;
   display: inline-block;
   margin: 1em;
+}
+
+nav a:hover {
+  background-color: #c0c0c0;
 }
 
 form div {
@@ -57,22 +84,43 @@ form div {
   /* background-color: darkkhaki; */
   display: flex;
   flex-direction: column;
-  align-content: flex-end;
-  align-content: flex-end;
+  align-self: center;
+  /* align-content: flex-end;
+  align-content: flex-end; */
+  padding: 60px;
+  color: black;
+  border: 1px solid orange;
+  background-color: rgb(245, 245, 220, 0.5);
+  width: 50%;
+  height: 10%;
+}
+
+.SingleTreeHouseLabels {
+  color: 'green';
 }
 
 .SingleTreeHouse img {
   width: 250px;
-  align-self: flex-start;
+  align-self: center;
+  flex-direction: column;
+  padding: 5;
+  color: 'white';
 }
 
 .SingleTreeHouse button {
   width: 100px;
+  align-self: center;
 }
 
 /* .checkout  */
+
 table {
-  width: 50%;
+  padding: 60px;
+  color: black;
+  font-size: 20px;
+  border: 1px solid orange;
+  background-color: rgb(245, 245, 220, 0.5);
+  width: 70%;
 }
 
 tr td {
@@ -83,4 +131,12 @@ tr td {
 
 .profileImage {
   width: 100px;
+}
+
+.totalprice {
+  border: black;
+  background-color: 1px solid orange;
+  padding: 60px;
+  color: orange;
+  font-size: 20px;
 }

@@ -89,7 +89,7 @@ class UserCart extends Component {
             </tbody>
           </table>
 
-          <div>Total Price: ${cartPriceTotal}</div>
+          <div className="totalprice">Total Price: ${cartPriceTotal}</div>
 
           {this.props.isLoggedIn ? (
             <button
